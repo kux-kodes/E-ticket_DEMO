@@ -1,3 +1,5 @@
+@import url('https://fonts.cdnfonts.com/css/harabara-mais');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -90,15 +92,15 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Harabara Mais Demo', 'Times New Roman', Times, serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Harabara Mais Demo', 'Times New Roman', Times, serif;
     font-weight: 400;
   }
 
   button, input, textarea, select {
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Harabara Mais Demo', 'Times New Roman', Times, serif;
   }
 }
