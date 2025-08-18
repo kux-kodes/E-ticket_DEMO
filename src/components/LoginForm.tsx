@@ -98,13 +98,13 @@ const LoginForm = () => {
                       className="pl-12 h-12 border-[#06404c]/20 focus:border-[#bcdc49] focus:ring-[#bcdc49] text-lg pr-12"
                       required
                     />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassport(!showPassport)}
-                      className="absolute right-3 top-3.5 text-[#06404c]/60 hover:text-[#06404c] transition-colors"
-                    >
-                      {showPassport ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                    </button>
+                    // <button
+                    //   type="button"
+                    //   onClick={() => setShowPassport(!showPassport)}
+                    //   className="absolute right-3 top-3.5 text-[#06404c]/60 hover:text-[#06404c] transition-colors"
+                    // >
+                    //   {showPassport ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    // </button>
                   </div>
                 </div>
               </>
