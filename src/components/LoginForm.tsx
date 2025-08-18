@@ -131,7 +131,7 @@ const LoginForm = () => {
                     <Input
                       id="passportNumber"
                       type="text"
-                      placeholder="Enter your passport number"
+                      placeholder="Enter your Passport number"
                       value={passportNumber}
                       onChange={(e) => passportNumber(e.target.value)}
                       className="pl-12 h-12 border-[#06404c]/20 focus:border-[#bcdc49] focus:ring-[#bcdc49] text-lg"
