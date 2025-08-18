@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Eye, EyeOff, CreditCard, User } from 'lucide-react';
+import { Eye, EyeOff, CreditCard, FileText } from 'lucide-react';
 
 const LoginForm = () => {
   const [idNumber, setIdNumber] = useState('');
@@ -48,16 +48,16 @@ const LoginForm = () => {
             <div className="space-y-2">
               <Label htmlFor="passportNumber" className="text-[#06404c] font-medium">Passport Number</Label>
               <div className="relative">
+                <FileText className="absolute left-3 top-3.5 h-5 w-5 text-[#06404c]/60" />
                 <Input
                   id="passportNumber"
                   type={showPassport ? "text" : "password"}
                   placeholder="Enter your passport number"
                   value={passportNumber}
                   onChange={(e) => setPassportNumber(e.target.value)}
-                  className="h-12 border-[#06404c]/20 focus:border-[#bcdc49] focus:ring-[#bcdc49] text-lg pr-12"
+                  className="pl-12 h-12 border-[#06404c]/20 focus:border-[#bcdc49] focus:ring-[#bcdc49] text-lg pr-12"
                   required
                 />
-                <User className="absolute left-3 top-3.5 h-5 w-5 text-[#06404c]/60" />
                 <button
                   type="button"
                   onClick={() => setShowPassport(!showPassport)}
