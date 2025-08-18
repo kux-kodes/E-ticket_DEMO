@@ -1,4 +1,4 @@
-@import url('https://fonts.cdnfonts.com/css/harabara-mais');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -92,15 +92,15 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Harabara Mais Demo', serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Harabara Mais Demo', serif;
-    font-weight: 400;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 500;
   }
 
   button, input, textarea, select {
-    font-family: 'Harabara Mais Demo', serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   }
 }
