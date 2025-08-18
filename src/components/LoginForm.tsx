@@ -13,7 +13,6 @@ const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [showPassport, setShowPassport] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -126,9 +125,9 @@ const LoginForm = () => {
             ) : (
               <>
                 <div className="space-y-2">
-                  <Label htmlFor="passportNumber" className="text-[#06404c] font-medium">ID Number</Label>
+                  <Label htmlFor="passportNumber" className="text-[#06404c] font-medium">Passport Number</Label>
                   <div className="relative">
-                    <CreditCard className="absolute left-3 top-3.5 h-5 w-5 text-[#06404c]/60" />
+                    <FileText className="absolute left-3 top-3.5 h-5 w-5 text-[#06404c]/60" />
                     <Input
                       id="passportNumber"
                       type="text"
