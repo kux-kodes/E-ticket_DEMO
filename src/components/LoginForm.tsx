@@ -61,7 +61,7 @@ const LoginForm = () => {
                   : "text-[#06404c]/70 hover:text-[#06404c]"
               )}
             >
-              Passport & Password
+              Passport
             </button>
           </div>
         </div>
