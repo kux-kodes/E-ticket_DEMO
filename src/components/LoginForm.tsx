@@ -86,24 +86,24 @@ const LoginForm = () => {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="passportNumber" className="text-[#06404c] font-medium">Passport Number</Label>
+                  <Label htmlFor="password" className="text-[#06404c] font-medium">Password</Label>
                   <div className="relative">
-                    <FileText className="absolute left-3 top-3.5 h-5 w-5 text-[#06404c]/60" />
+                    <Lock className="absolute left-3 top-3.5 h-5 w-5 text-[#06404c]/60" />
                     <Input
-                      id="passportNumber"
-                      type={showPassport ? "text" : "password"}
-                      placeholder="Enter your passport number"
-                      value={passportNumber}
-                      onChange={(e) => setPassportNumber(e.target.value)}
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Enter your password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       className="pl-12 h-12 border-[#06404c]/20 focus:border-[#bcdc49] focus:ring-[#bcdc49] text-lg pr-12"
                       required
                     />
                     <button
                       type="button"
-                      onClick={() => setShowPassport(!showPassport)}
+                      onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-3.5 text-[#06404c]/60 hover:text-[#06404c] transition-colors"
                     >
-                      {showPassport ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                      {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                     </button>
                   </div>
                 </div>
