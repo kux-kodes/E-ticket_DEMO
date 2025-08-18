@@ -3,16 +3,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Eye, EyeOff, Mail } from 'lucide-react';
+import { Eye, EyeOff, CreditCard, User } from 'lucide-react';
 
 const LoginForm = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [idNumber, setIdNumber] = useState('');
+  const [passportNumber, setPassportNumber] = useState('');
+  const [showPassport, setShowPassport] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Login attempt with:', { email, password });
+    console.log('Login attempt with:', { idNumber, passportNumber });
     // In a real app, you would handle authentication here
   };
 
@@ -31,38 +31,39 @@ const LoginForm = () => {
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-6 px-8">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-[#06404c] font-medium">Email Address</Label>
+              <Label htmlFor="idNumber" className="text-[#06404c] font-medium">ID Number</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3.5 h-5 w-5 text-[#06404c]/60" />
+                <CreditCard className="absolute left-3 top-3.5 h-5 w-5 text-[#06404c]/60" />
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  id="idNumber"
+                  type="text"
+                  placeholder="Enter your ID number"
+                  value={idNumber}
+                  onChange={(e) => setIdNumber(e.target.value)}
                   className="pl-12 h-12 border-[#06404c]/20 focus:border-[#bcdc49] focus:ring-[#bcdc49] text-lg"
                   required
                 />
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-[#06404c] font-medium">Password</Label>
+              <Label htmlFor="passportNumber" className="text-[#06404c] font-medium">Passport Number</Label>
               <div className="relative">
                 <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  id="passportNumber"
+                  type={showPassport ? "text" : "password"}
+                  placeholder="Enter your passport number"
+                  value={passportNumber}
+                  onChange={(e) => setPassportNumber(e.target.value)}
                   className="h-12 border-[#06404c]/20 focus:border-[#bcdc49] focus:ring-[#bcdc49] text-lg pr-12"
                   required
                 />
+                <User className="absolute left-3 top-3.5 h-5 w-5 text-[#06404c]/60" />
                 <button
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
+                  onClick={() => setShowPassport(!showPassport)}
                   className="absolute right-3 top-3.5 text-[#06404c]/60 hover:text-[#06404c] transition-colors"
                 >
-                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  {showPassport ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
             </div>
@@ -76,7 +77,7 @@ const LoginForm = () => {
             </Button>
             <div className="mt-6 text-center">
               <a href="#" className="text-[#bcdc49] hover:text-[#bcdc49]/80 font-medium transition-colors">
-                Forgot your password?
+                Need help with your credentials?
               </a>
             </div>
           </CardFooter>
