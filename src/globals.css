@@ -2,14 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
-@font-face {
-  font-family: 'Harabara Mais Demo';
-  src: url('https://fonts.cdnfonts.com/css/harabara-mais') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-}
+@import url('https://fonts.cdnfonts.com/css/harabara-mais');
 
 @layer base {
   :root {
@@ -99,11 +92,19 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Harabara Mais Demo', 'Inter', sans-serif;
+    font-family: 'Harabara Mais Demo', sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Harabara Mais Demo', 'Inter', sans-serif;
-    font-weight: 600;
+    font-family: 'Harabara Mais Demo', sans-serif;
+    font-weight: 400;
+  }
+
+  button, input, textarea, select {
+    font-family: 'Harabara Mais Demo', sans-serif;
+  }
+
+  .font-harabara {
+    font-family: 'Harabara Mais Demo', sans-serif;
   }
 }
