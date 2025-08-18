@@ -92,15 +92,15 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Harabara Mais Demo', 'Times New Roman', Times, serif;
+    font-family: 'Harabara Mais Demo', serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Harabara Mais Demo', 'Times New Roman', Times, serif;
+    font-family: 'Harabara Mais Demo', serif;
     font-weight: 400;
   }
 
   button, input, textarea, select {
-    font-family: 'Harabara Mais Demo', 'Times New Roman', Times, serif;
+    font-family: 'Harabara Mais Demo', serif;
   }
 }
