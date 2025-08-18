@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
+import Logo from "@/components/Logo";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
@@ -25,9 +26,7 @@ const SignIn = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#06404c] to-[#0a5a6a] p-4">
       <Card className="w-full max-w-md border-0 shadow-2xl bg-white/95 backdrop-blur">
         <CardHeader className="text-center pb-8">
-          <div className="w-20 h-20 bg-[#bcdc49] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-            <span className="text-3xl font-bold text-[#06404c]">D</span>
-          </div>
+          <Logo size="xl" className="mx-auto mb-6" />
           <CardTitle className="text-3xl text-[#06404c] mb-2">Welcome Back</CardTitle>
           <CardDescription className="text-[#06404c]/80 text-lg">
             Sign in to your DRIVA account

@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import Logo from "@/components/Logo";
 
 const SplashScreen = () => {
   return (
@@ -11,7 +12,6 @@ const SplashScreen = () => {
         className="text-center"
       >
         <motion.div
-          className="w-32 h-32 mx-auto mb-8 bg-[#bcdc49] rounded-full flex items-center justify-center shadow-lg"
           animate={{ 
             scale: [1, 1.05, 1],
           }}
@@ -21,7 +21,7 @@ const SplashScreen = () => {
             repeatType: "reverse"
           }}
         >
-          <div className="text-6xl font-bold text-[#06404c]">D</div>
+          <Logo size="xl" className="mx-auto mb-8" />
         </motion.div>
         <motion.h1 
           className="text-5xl font-bold text-white mb-3 tracking-wide"

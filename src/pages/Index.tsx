@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Users, TrendingUp, DollarSign, Shield, Zap, Globe, Clock, ArrowRight, CheckCircle } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
+import Logo from "@/components/Logo";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -65,9 +66,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-[#bcdc49] rounded-full flex items-center justify-center">
-                <span className="text-lg font-bold text-[#06404c]">D</span>
-              </div>
+              <Logo size="medium" />
               <span className="text-xl font-bold text-white">DRIVA</span>
             </div>
             <div className="flex items-center space-x-4">
@@ -225,9 +224,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-3 mb-4 md:mb-0">
-              <div className="w-8 h-8 bg-[#bcdc49] rounded-full flex items-center justify-center">
-                <span className="text-lg font-bold text-[#06404c]">D</span>
-              </div>
+              <Logo size="small" />
               <span className="text-xl font-bold text-white">DRIVA</span>
             </div>
             <div className="flex space-x-6">

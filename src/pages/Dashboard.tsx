@@ -2,6 +2,7 @@ import { MadeWithDyad } from "@/components/made-with-dyad";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Users, TrendingUp, DollarSign, Bell, Settings, LogOut } from 'lucide-react';
+import Logo from "@/components/Logo";
 
 const Dashboard = () => {
   return (
@@ -9,9 +10,7 @@ const Dashboard = () => {
       <header className="bg-[#06404c] shadow-lg">
         <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex justify-between items-center">
           <div className="flex items-center space-x-4">
-            <div className="w-10 h-10 bg-[#bcdc49] rounded-full flex items-center justify-center">
-              <span className="text-xl font-bold text-[#06404c]">D</span>
-            </div>
+            <Logo size="medium" />
             <h1 className="text-3xl font-bold text-white">DRIVA Dashboard</h1>
           </div>
           <div className="flex items-center space-x-4">
