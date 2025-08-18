@@ -11,9 +11,9 @@ const SplashScreen = () => {
         className="text-center"
       >
         <motion.div
-          className="w-24 h-24 mx-auto mb-6 bg-[#bcdc49] rounded-full flex items-center justify-center"
+          className="w-32 h-32 mx-auto mb-8 bg-[#bcdc49] rounded-full flex items-center justify-center shadow-lg"
           animate={{ 
-            scale: [1, 1.1, 1],
+            scale: [1, 1.05, 1],
           }}
           transition={{ 
             duration: 2,
@@ -21,10 +21,10 @@ const SplashScreen = () => {
             repeatType: "reverse"
           }}
         >
-          <div className="text-4xl font-bold text-[#06404c]">D</div>
+          <div className="text-6xl font-bold text-[#06404c]">D</div>
         </motion.div>
         <motion.h1 
-          className="text-4xl font-bold text-white mb-2"
+          className="text-5xl font-bold text-white mb-3 tracking-wide"
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
@@ -32,12 +32,12 @@ const SplashScreen = () => {
           DRIVA
         </motion.h1>
         <motion.p 
-          className="text-[#bcdc49] text-lg"
+          className="text-[#bcdc49] text-xl tracking-wider"
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.4, duration: 0.5 }}
         >
-          Driving innovation forward
+          Driving Innovation Forward
         </motion.p>
       </motion.div>
     </div>
