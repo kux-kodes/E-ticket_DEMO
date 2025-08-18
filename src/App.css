@@ -3,7 +3,7 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  font-family: 'Harabara Mais Demo', sans-serif;
+  font-family: 'Times New Roman', Times, serif;
 }
 
 .logo {
@@ -11,7 +11,7 @@
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
-  font-family: 'Harabara Mais Demo', sans-serif;
+  font-family: 'Times New Roman', Times, serif;
 }
 
 .logo:hover {
@@ -39,14 +39,14 @@
 
 .card {
   padding: 2em;
-  font-family: 'Harabara Mais Demo', sans-serif;
+  font-family: 'Times New Roman', Times, serif;
 }
 
 .read-the-docs {
   color: #888;
-  font-family: 'Harabara Mais Demo', sans-serif;
+  font-family: 'Times New Roman', Times, serif;
 }
 
 * {
-  font-family: 'Harabara Mais Demo', sans-serif !important;
+  font-family: 'Times New Roman', Times, serif !important;
 }
