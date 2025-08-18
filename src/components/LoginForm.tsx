@@ -86,6 +86,21 @@ const LoginForm = () => {
                   </div>
                 </div>
                 <div className="space-y-2">
+                  <Label htmlFor="email" className="text-[#06404c] font-medium">Email</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-3.5 h-5 w-5 text-[#06404c]/60" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="Enter your email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="pl-12 h-12 border-[#06404c]/20 focus:border-[#bcdc49] focus:ring-[#bcdc49] text-lg"
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
                   <Label htmlFor="password" className="text-[#06404c] font-medium">Password</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-3.5 h-5 w-5 text-[#06404c]/60" />
