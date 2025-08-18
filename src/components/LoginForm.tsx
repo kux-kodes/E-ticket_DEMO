@@ -18,9 +18,9 @@ const LoginForm = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (loginMethod === 'credentials') {
-      console.log('Login attempt with ID/Passport:', { idNumber, passportNumber });
+      console.log('Login attempt with ID:', { idNumber, email, password });
     } else {
-      console.log('Login attempt with Email/Password:', { email, password });
+      console.log('Login attempt with Passport:', { passportNumber, email, password });
     }
   };
 
@@ -49,7 +49,7 @@ const LoginForm = () => {
                   : "text-[#06404c]/70 hover:text-[#06404c]"
               )}
             >
-              ID & Passport
+              ID
             </button>
             <button
               type="button"
@@ -61,7 +61,7 @@ const LoginForm = () => {
                   : "text-[#06404c]/70 hover:text-[#06404c]"
               )}
             >
-              Email & Password
+              Passport & Password
             </button>
           </div>
         </div>
