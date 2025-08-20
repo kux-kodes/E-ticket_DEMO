@@ -113,7 +113,7 @@ const MyFines = () => {
                     <TableCell className="text-right">
                       {fine.status.toLowerCase() === 'outstanding' || fine.status.toLowerCase() === 'overdue' ? (
                         <div className="flex gap-2 justify-end">
-                          <Button variant="outline" size="sm">Pay Now</Button>
+                          <Button variant="outline" size="sm" onClick={() => navigate(`/payment/${fine.id.replace('#', '')}`)}>Pay Now</Button>
                           <Button variant="ghost" size="sm" onClick={() => navigate(`/dispute-fine/${fine.id.replace('#', '')}`)}>Dispute</Button>
                         </div>
                       ) : (
