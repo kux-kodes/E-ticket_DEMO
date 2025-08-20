@@ -1,7 +1,7 @@
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart, Users, TrendingUp, DollarSign, Shield, Zap, Globe, Clock, ArrowRight, CheckCircle } from 'lucide-react';
+import { FileText, Database, Users, LayoutDashboard, ShieldCheck, Gavel, ArrowRight, CheckCircle } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
 import Logo from "@/components/Logo";
 
@@ -10,52 +10,52 @@ const Index = () => {
 
   const features = [
     {
-      icon: BarChart,
-      title: "Real-time Analytics",
-      description: "Track your business performance with live dashboards and detailed reports"
+      icon: FileText,
+      title: "Digital Fine Issuance",
+      description: "Issue traffic fines instantly from any mobile device, eliminating manual paperwork."
+    },
+    {
+      icon: Database,
+      title: "Centralized Database",
+      description: "All fines are logged in a secure, real-time database, accessible from anywhere."
     },
     {
       icon: Users,
-      title: "Customer Management",
-      description: "Manage customer relationships, subscriptions, and engagement in one place"
+      title: "Citizen Portal",
+      description: "A public-facing portal for offenders to easily view, dispute, and pay their fines online."
     },
     {
-      icon: TrendingUp,
-      title: "Growth Insights",
-      description: "Get AI-powered recommendations to grow your business faster"
+      icon: LayoutDashboard,
+      title: "Officer Dashboards",
+      description: "Provide officers with a clear overview of their issued fines and their current statuses."
     },
     {
-      icon: DollarSign,
-      title: "Revenue Tracking",
-      description: "Monitor revenue streams, payments, and financial health with precision"
+      icon: ShieldCheck,
+      title: "Secure Payments",
+      description: "Integrated with a secure payment gateway for fast and hassle-free fine settlements."
     },
     {
-      icon: Shield,
-      title: "Enterprise Security",
-      description: "Bank-level security with end-to-end encryption and compliance standards"
-    },
-    {
-      icon: Zap,
-      title: "Lightning Fast",
-      description: "Instant loading times and real-time updates across all your devices"
+      icon: Gavel,
+      title: "Streamlined Disputes",
+      description: "An efficient, evidence-based process for citizens to dispute fines they believe are incorrect."
     }
   ];
 
   const testimonials = [
     {
-      name: "Sarah Johnson",
-      role: "CEO, TechStart Inc",
-      content: "DRIVA transformed how we track our SaaS metrics. The insights are incredible!"
+      name: "Inspector M. Kavari",
+      role: "Chief of Traffic Police, Windhoek",
+      content: "DRIVA has revolutionized our process. What used to take weeks of paperwork now happens in real-time."
     },
     {
-      name: "Michael Chen",
-      role: "Founder, GrowthLabs",
-      content: "Best investment we've made. Our revenue grew 300% in 6 months with DRIVA."
+      name: "Sgt. A. Shipanga",
+      role: "Traffic Officer, Khomas Region",
+      content: "Issuing fines on the roadside is now faster and more accurate. The citizen portal has also reduced queries at the station."
     },
     {
-      name: "Emma Rodriguez",
-      role: "Operations Director, ScaleUp",
-      content: "The customer management features are game-changing. Highly recommend!"
+      name: "John Doe",
+      role: "Citizen",
+      content: "I was able to pay my fine online in minutes. The process was straightforward and much more convenient."
     }
   ];
 
@@ -75,13 +75,13 @@ const Index = () => {
                 className="text-white hover:text-[#bcdc49] hover:bg-white/10"
                 onClick={() => navigate('/sign-in')}
               >
-                Sign In
+                Login
               </Button>
               <Button 
                 className="bg-[#bcdc49] hover:bg-[#bcdc49]/90 text-[#06404c] font-medium"
                 onClick={() => navigate('/sign-up')}
               >
-                Get Started Free
+                Register
               </Button>
             </div>
           </div>
@@ -92,13 +92,13 @@ const Index = () => {
       <section className="pt-20 pb-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
-            Drive Your Business
+            Modernizing Traffic Enforcement,
             <br />
-            <span className="text-[#bcdc49]">Forward with Data</span>
+            <span className="text-[#bcdc49]">One Fine at a Time.</span>
           </h1>
           <p className="text-xl text-white/80 mb-8 max-w-3xl mx-auto">
-            Join 10,000+ businesses using DRIVA to track revenue, manage customers, 
-            and accelerate growth with real-time analytics and AI-powered insights.
+            DRIVA replaces manual ticketing and Excel databases with a seamless,
+            digital system for issuing, tracking, and settling traffic fines.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
@@ -106,19 +106,17 @@ const Index = () => {
               className="bg-[#bcdc49] hover:bg-[#bcdc49]/90 text-[#06404c] text-lg font-medium px-8 py-6"
               onClick={() => navigate('/sign-up')}
             >
-              Start Free Trial
+              Officer Portal
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
             <Button 
               size="lg" 
               variant="outline"
               className="border-white/30 text-white hover:bg-white/10 text-lg font-medium px-8 py-6"
-              onClick={() => navigate('/sign-in')}
             >
-              Sign In
+              Pay a Fine
             </Button>
           </div>
-          <p className="text-white/60 mt-4">No credit card required • 14-day free trial</p>
         </div>
       </section>
 
@@ -126,8 +124,8 @@ const Index = () => {
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white/5">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">Everything You Need to Scale</h2>
-            <p className="text-xl text-white/70">Powerful features designed for growing businesses</p>
+            <h2 className="text-4xl font-bold text-white mb-4">A Smarter System for Safer Roads</h2>
+            <p className="text-xl text-white/70">Powerful features for officers and citizens alike.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
@@ -154,20 +152,20 @@ const Index = () => {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
             <div>
-              <div className="text-4xl font-bold text-[#bcdc49] mb-2">10,000+</div>
-              <div className="text-white/70">Active Businesses</div>
+              <div className="text-4xl font-bold text-[#bcdc49] mb-2">50,000+</div>
+              <div className="text-white/70">Fines Processed</div>
             </div>
             <div>
-              <div className="text-4xl font-bold text-[#bcdc49] mb-2">$2.5B+</div>
-              <div className="text-white/70">Revenue Tracked</div>
+              <div className="text-4xl font-bold text-[#bcdc49] mb-2">95%</div>
+              <div className="text-white/70">Faster Processing</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold text-[#bcdc49] mb-2">14</div>
+              <div className="text-white/70">Regions Covered</div>
             </div>
             <div>
               <div className="text-4xl font-bold text-[#bcdc49] mb-2">99.9%</div>
-              <div className="text-white/70">Uptime</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-[#bcdc49] mb-2">24/7</div>
-              <div className="text-white/70">Support</div>
+              <div className="text-white/70">System Uptime</div>
             </div>
           </div>
         </div>
@@ -177,8 +175,8 @@ const Index = () => {
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white/5">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">Trusted by Industry Leaders</h2>
-            <p className="text-xl text-white/70">See what our customers are saying</p>
+            <h2 className="text-4xl font-bold text-white mb-4">Trusted by Law Enforcement</h2>
+            <p className="text-xl text-white/70">See what officials and citizens are saying.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
@@ -204,16 +202,16 @@ const Index = () => {
       {/* CTA Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold text-white mb-4">Ready to Transform Your Business?</h2>
+          <h2 className="text-4xl font-bold text-white mb-4">Ready to Modernize Your Traffic System?</h2>
           <p className="text-xl text-white/70 mb-8">
-            Join thousands of businesses already using DRIVA to accelerate their growth.
+            Join the digital transformation of traffic enforcement.
           </p>
           <Button 
             size="lg" 
             className="bg-[#bcdc49] hover:bg-[#bcdc49]/90 text-[#06404c] text-xl font-medium px-10 py-6"
             onClick={() => navigate('/sign-up')}
           >
-            Start Your Free Trial Now
+            Register Your Department
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
         </div>
