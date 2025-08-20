@@ -1,8 +1,9 @@
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart, DollarSign, Bell, Settings, LogOut, FilePlus, AlertTriangle, Clock } from 'lucide-react';
+import { DollarSign, Bell, Settings, LogOut, FilePlus, AlertTriangle, Clock } from 'lucide-react';
 import Logo from "@/components/Logo";
+import FinesChart from "@/components/FinesChart";
 
 const Dashboard = () => {
   return (
@@ -94,12 +95,7 @@ const Dashboard = () => {
               <CardDescription className="text-[#06404c]/70">Daily fines issued this week</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-80 flex items-center justify-center bg-[#06404c]/5 rounded-lg border-2 border-dashed border-[#06404c]/20">
-                <div className="text-center">
-                  <BarChart className="h-12 w-12 text-[#06404c]/40 mx-auto mb-4" />
-                  <p className="text-[#06404c]/60">Chart visualization of recent fines will appear here</p>
-                </div>
-              </div>
+              <FinesChart />
             </CardContent>
           </Card>
           
