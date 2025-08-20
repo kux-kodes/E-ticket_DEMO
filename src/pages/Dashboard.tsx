@@ -11,6 +11,13 @@ import { Notifications } from "@/components/Notifications";
 const Dashboard = () => {
   const navigate = useNavigate();
 
+  const recentActivity = [
+    { title: "New fine issued to N12345W", time: "2 minutes ago", path: "/new-fines" },
+    { title: "Payment received for fine #8432", time: "15 minutes ago", path: "/paid-fines" },
+    { title: "New dispute filed for fine #8219", time: "1 hour ago", path: "/pending-disputes" },
+    { title: "Fine #8430 is now overdue", time: "3 hours ago", path: "/outstanding-fines" }
+  ];
+
   return (
     <div className="min-h-screen bg-background">
       <header className="bg-background/80 backdrop-blur-md border-b border-border/50 sticky top-0 z-10">
@@ -146,13 +153,12 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {[
-                  { title: "New fine issued to N12345W", time: "2 minutes ago" },
-                  { title: "Payment received for fine #8432", time: "15 minutes ago" },
-                  { title: "New dispute filed for fine #8219", time: "1 hour ago" },
-                  { title: "Fine #8430 is now overdue", time: "3 hours ago" }
-                ].map((item, index) => (
-                  <div key={index} className="flex items-start space-x-3 p-3 rounded-lg hover:shadow-neumorphic-inset transition-shadow">
+                {recentActivity.map((item, index) => (
+                  <div 
+                    key={index} 
+                    className="flex items-start space-x-3 p-3 rounded-lg hover:shadow-neumorphic-inset transition-shadow cursor-pointer"
+                    onClick={() => navigate(item.path)}
+                  >
                     <div className="shadow-neumorphic-inset p-2 rounded-full mt-0.5">
                       <div className="bg-primary w-2 h-2 rounded-full"></div>
                     </div>
