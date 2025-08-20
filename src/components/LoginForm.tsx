@@ -4,9 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Eye, EyeOff, User, Mail, Lock, Phone, MapPin } from 'lucide-react';
-import Logo from "@/components/Logo";
+import { cn } from "@/lib/utils";
 
-const SignUp = () => {
+const LoginForm = () => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -32,7 +32,9 @@ const SignUp = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#06404c] to-[#0a5a6a] p-4">
       <Card className="w-full max-w-lg border-0 shadow-2xl bg-white/95 backdrop-blur">
         <CardHeader className="text-center pb-8">
-          <Logo size="xl" className="mx-auto mb-6" />
+          <div className="w-20 h-20 bg-[#bcdc49] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+            <span className="text-3xl font-bold text-[#06404c]">D</span>
+          </div>
           <CardTitle className="text-3xl text-[#06404c] mb-2">Create Account</CardTitle>
           <CardDescription className="text-[#06404c]/80 text-lg">
             Join DRIVA today
@@ -178,7 +180,7 @@ const SignUp = () => {
             <div className="mt-6 text-center">
               <p className="text-sm text-[#06404c]/70">
                 Already have an account?{' '}
-                <a href="/sign-in" className="text-[#bcdc49] hover:text-[#bcdc49]/80 font-medium transition-colors">
+                <a href="#" className="text-[#bcdc49] hover:text-[#bcdc49]/80 font-medium transition-colors">
                   Sign in here
                 </a>
               </p>
@@ -190,4 +192,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default LoginForm;
