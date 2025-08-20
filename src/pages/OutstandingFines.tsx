@@ -38,16 +38,15 @@ const OutstandingFines = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-[#06404c] shadow-lg">
+    <div className="min-h-screen bg-background">
+      <header className="bg-background/80 backdrop-blur-md border-b border-border/50 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex justify-between items-center">
           <div className="flex items-center space-x-4">
             <Logo size="medium" />
-            <h1 className="text-3xl font-bold text-white">Outstanding Fines</h1>
+            <h1 className="text-3xl font-bold text-foreground">Outstanding Fines</h1>
           </div>
           <Button 
             variant="ghost" 
-            className="text-white hover:text-[#bcdc49] hover:bg-white/10"
             onClick={() => navigate('/dashboard')}
           >
             <ArrowLeft className="mr-2 h-5 w-5" />
@@ -56,26 +55,26 @@ const OutstandingFines = () => {
         </div>
       </header>
       <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        <Card className="border-0 shadow-lg">
+        <Card>
           <CardHeader>
-            <CardTitle className="text-xl text-[#06404c]">All Outstanding Fines</CardTitle>
-            <CardDescription className="text-[#06404c]/70">A record of all unpaid and overdue fines.</CardDescription>
+            <CardTitle className="text-xl text-foreground">All Outstanding Fines</CardTitle>
+            <CardDescription className="text-foreground/70">A record of all unpaid and overdue fines.</CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="font-bold text-[#06404c]">Fine ID</TableHead>
-                  <TableHead className="font-bold text-[#06404c]">Offender</TableHead>
-                  <TableHead className="font-bold text-[#06404c]">Violation Type</TableHead>
-                  <TableHead className="font-bold text-[#06404c] text-right">Amount (N$)</TableHead>
-                  <TableHead className="font-bold text-[#06404c]">Due Date</TableHead>
-                  <TableHead className="font-bold text-[#06404c]">Status</TableHead>
+                  <TableHead className="font-bold text-foreground">Fine ID</TableHead>
+                  <TableHead className="font-bold text-foreground">Offender</TableHead>
+                  <TableHead className="font-bold text-foreground">Violation Type</TableHead>
+                  <TableHead className="font-bold text-foreground text-right">Amount (N$)</TableHead>
+                  <TableHead className="font-bold text-foreground">Due Date</TableHead>
+                  <TableHead className="font-bold text-foreground">Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {outstandingFinesData.map((fine) => (
-                  <TableRow key={fine.id} className="hover:bg-[#bcdc49]/10">
+                  <TableRow key={fine.id} className="hover:shadow-neumorphic-inset">
                     <TableCell className="font-medium">{fine.id}</TableCell>
                     <TableCell>{fine.offender}</TableCell>
                     <TableCell>{fine.violation}</TableCell>
