@@ -6,15 +6,17 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { useNavigate } from 'react-router-dom';
 
 const notifications = [
-  { title: "New fine issued to N12345W", time: "2 minutes ago", read: false },
-  { title: "Payment received for fine #8432", time: "15 minutes ago", read: false },
-  { title: "New dispute filed for fine #8219", time: "1 hour ago", read: true },
-  { title: "Fine #8430 is now overdue", time: "3 hours ago", read: true }
+  { title: "New fine issued to N12345W", time: "2 minutes ago", read: false, path: "/new-fines" },
+  { title: "Payment received for fine #8432", time: "15 minutes ago", read: false, path: "/paid-fines" },
+  { title: "New dispute filed for fine #8219", time: "1 hour ago", read: true, path: "/pending-disputes" },
+  { title: "Fine #8430 is now overdue", time: "3 hours ago", read: true, path: "/outstanding-fines" }
 ];
 
 export function Notifications() {
+  const navigate = useNavigate();
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
@@ -39,7 +41,11 @@ export function Notifications() {
           <CardContent className="p-0">
             <div className="space-y-2">
               {notifications.map((item, index) => (
-                <div key={index} className={`flex items-start space-x-3 p-3 rounded-lg transition-colors ${!item.read ? 'bg-secondary' : ''}`}>
+                <div 
+                  key={index} 
+                  className={`flex items-start space-x-3 p-3 rounded-lg transition-colors cursor-pointer ${!item.read ? 'bg-secondary' : 'hover:bg-secondary/50'}`}
+                  onClick={() => navigate(item.path)}
+                >
                   <div className={`mt-1.5 h-2 w-2 rounded-full ${!item.read ? 'bg-primary' : 'bg-transparent'}`}></div>
                   <div className="flex-1">
                     <p className="text-sm font-medium text-foreground">{item.title}</p>
