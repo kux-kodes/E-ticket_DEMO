@@ -27,8 +27,8 @@ type Dispute = {
     profiles: {
       first_name: string;
       last_name: string;
-    } | null;
-  } | null;
+    }[] | null;
+  }[] | null;
 };
 
 const PendingDisputes = () => {
@@ -59,7 +59,7 @@ const PendingDisputes = () => {
         console.error('Error fetching disputes:', error);
         showError('Failed to fetch pending disputes.');
       } else if (data) {
-        setDisputes(data);
+        setDisputes(data as Dispute[]);
       }
       setLoading(false);
     };
@@ -68,8 +68,8 @@ const PendingDisputes = () => {
   }, []);
 
   const filteredDisputes = disputes.filter(dispute => {
-    const offenderName = dispute.fines?.profiles ? `${dispute.fines.profiles.first_name} ${dispute.fines.profiles.last_name}` : 'Unknown';
-    const violation = dispute.fines?.violation_type || '';
+    const offenderName = dispute.fines?.[0]?.profiles?.[0] ? `${dispute.fines[0].profiles[0].first_name} ${dispute.fines[0].profiles[0].last_name}` : 'Unknown';
+    const violation = dispute.fines?.[0]?.violation_type || '';
     return (
       dispute.fine_id.toLowerCase().includes(searchQuery.toLowerCase()) ||
       offenderName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -143,8 +143,8 @@ const PendingDisputes = () => {
                   filteredDisputes.map((dispute) => (
                     <TableRow key={dispute.fine_id} className="hover:shadow-neumorphic-inset">
                       <TableCell className="font-medium">{dispute.fine_id.substring(0, 8).toUpperCase()}</TableCell>
-                      <TableCell>{dispute.fines?.profiles ? `${dispute.fines.profiles.first_name} ${dispute.fines.profiles.last_name}` : 'N/A'}</TableCell>
-                      <TableCell>{dispute.fines?.violation_type || 'N/A'}</TableCell>
+                      <TableCell>{dispute.fines?.[0]?.profiles?.[0] ? `${dispute.fines[0].profiles[0].first_name} ${dispute.fines[0].profiles[0].last_name}` : 'N/A'}</TableCell>
+                      <TableCell>{dispute.fines?.[0]?.violation_type || 'N/A'}</TableCell>
                       <TableCell>{new Date(dispute.submitted_at).toLocaleDateString()}</TableCell>
                       <TableCell className="text-right">
                         <Button 

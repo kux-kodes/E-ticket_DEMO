@@ -26,13 +26,13 @@ type DisputeDetails = {
     profiles: {
       first_name: string;
       last_name: string;
-    } | null;
+    }[] | null;
     officer: {
       first_name: string;
       last_name: string;
       badge_number: string;
-    } | null;
-  } | null;
+    }[] | null;
+  }[] | null;
 };
 
 const DisputeReview = () => {
@@ -78,7 +78,7 @@ const DisputeReview = () => {
         showError('Failed to load dispute details or it has been resolved.');
         setDispute(null);
       } else {
-        setDispute(data as DisputeDetails);
+        setDispute(data as unknown as DisputeDetails);
       }
       setLoading(false);
     };
@@ -116,7 +116,7 @@ const DisputeReview = () => {
     }
   };
 
-  const fine = dispute?.fines;
+  const fine = dispute?.fines?.[0];
 
   return (
     <div className="min-h-screen bg-background">
@@ -170,7 +170,7 @@ const DisputeReview = () => {
                   <Separator />
                   <div className="space-y-1">
                     <Label className="text-sm text-foreground/70 flex items-center"><User className="w-4 h-4 mr-2" />Offender</Label>
-                    <p>{fine.profiles ? `${fine.profiles.first_name} ${fine.profiles.last_name}` : 'N/A'}</p>
+                    <p>{fine.profiles?.[0] ? `${fine.profiles[0].first_name} ${fine.profiles[0].last_name}` : 'N/A'}</p>
                   </div>
                   <div className="space-y-1">
                     <Label className="text-sm text-foreground/70 flex items-center"><Car className="w-4 h-4 mr-2" />License Plate</Label>
@@ -182,7 +182,7 @@ const DisputeReview = () => {
                   </div>
                   <div className="space-y-1">
                     <Label className="text-sm text-foreground/70 flex items-center"><Shield className="w-4 h-4 mr-2" />Issuing Officer</Label>
-                    <p>{fine.officer ? `${fine.officer.first_name} ${fine.officer.last_name} (#${fine.officer.badge_number})` : 'N/A'}</p>
+                    <p>{fine.officer?.[0] ? `${fine.officer[0].first_name} ${fine.officer[0].last_name} (#${fine.officer[0].badge_number})` : 'N/A'}</p>
                   </div>
                 </CardContent>
               </Card>
