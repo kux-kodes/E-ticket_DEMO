@@ -91,6 +91,7 @@ const MyFines = () => {
                   <TableHead className="font-bold text-foreground">Violation</TableHead>
                   <TableHead className="font-bold text-foreground text-right">Amount (N$)</TableHead>
                   <TableHead className="font-bold text-foreground">Date Issued</TableHead>
+                  <TableHead className="font-bold text-foreground">Due Date</TableHead>
                   <TableHead className="font-bold text-foreground">Status</TableHead>
                   <TableHead className="font-bold text-foreground text-right">Actions</TableHead>
                 </TableRow>
@@ -102,6 +103,7 @@ const MyFines = () => {
                     <TableCell>{fine.violation}</TableCell>
                     <TableCell className="text-right">{fine.amount.toFixed(2)}</TableCell>
                     <TableCell>{fine.date}</TableCell>
+                    <TableCell>{fine.dueDate}</TableCell>
                     <TableCell>{getStatusBadge(fine.status)}</TableCell>
                     <TableCell className="text-right">
                       {fine.status.toLowerCase() === 'outstanding' || fine.status.toLowerCase() === 'overdue' ? (
