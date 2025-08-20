@@ -208,7 +208,7 @@ const Index = () => {
           <Button 
             size="lg" 
             className="bg-primary text-primary-foreground text-xl font-medium px-10 py-6"
-            onClick={() => navigate('/sign-up')}
+            onClick={() => navigate('/register-department')}
           >
             Register Your Department
             <ArrowRight className="ml-2 h-5 w-5" />

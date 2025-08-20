@@ -24,6 +24,8 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import FineDetails from "./pages/FineDetails";
 import DisputeReview from "./pages/DisputeReview";
 import Emergency from "./pages/Emergency";
+import DepartmentRegistration from "./pages/DepartmentRegistration";
+import DepartmentRegistrationSuccess from "./pages/DepartmentRegistrationSuccess";
 
 const queryClient = new QueryClient();
 
@@ -52,6 +54,8 @@ const App = () => {
                 <Route path="/" element={<Index />} />
                 <Route path="/sign-in" element={<SignIn />} />
                 <Route path="/sign-up" element={<SignUp />} />
+                <Route path="/register-department" element={<DepartmentRegistration />} />
+                <Route path="/department-registration-success" element={<DepartmentRegistrationSuccess />} />
                 
                 {/* Officer Routes */}
                 <Route path="/dashboard" element={<Dashboard />} />
