@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -15,25 +15,64 @@ import { useNavigate } from 'react-router-dom';
 import Logo from "@/components/Logo";
 import { MadeWithDyad } from '@/components/made-with-dyad';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { supabase } from '@/integrations/supabase/client';
+import { showError } from '@/utils/toast';
+import { Skeleton } from '@/components/ui/skeleton';
 
-const paidFinesData = [
-  { id: '#8432', offender: 'John Doe', violation: 'Speeding', amount: 500.00, date: '2024-07-29' },
-  { id: '#8421', offender: 'Jane Smith', violation: 'Illegal Parking', amount: 250.00, date: '2024-07-29' },
-  { id: '#8415', offender: 'Peter Jones', violation: 'Running a red light', amount: 1000.00, date: '2024-07-28' },
-  { id: '#8410', offender: 'Mary Williams', violation: 'Expired license disk', amount: 300.00, date: '2024-07-28' },
-  { id: '#8405', offender: 'David Brown', violation: 'Speeding', amount: 750.00, date: '2024-07-27' },
-  { id: '#8399', offender: 'Linda Davis', violation: 'Using phone while driving', amount: 1200.00, date: '2024-07-27' },
-];
+type PaidFine = {
+  id: string;
+  violation_type: string;
+  amount: number;
+  fine_date: string; // Assuming we want to show when it was issued
+  profiles: {
+    first_name: string;
+    last_name: string;
+  }[] | null;
+};
 
 const PaidFines = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+  const [fines, setFines] = useState<PaidFine[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filteredFines = paidFinesData.filter(fine =>
-    fine.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    fine.offender.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    fine.violation.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  useEffect(() => {
+    const fetchPaidFines = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('fines')
+        .select(`
+          id,
+          violation_type,
+          amount,
+          fine_date,
+          profiles:user_id (
+            first_name,
+            last_name
+          )
+        `)
+        .eq('status', 'paid');
+
+      if (error) {
+        console.error('Error fetching paid fines:', error);
+        showError('Failed to fetch paid fines.');
+      } else {
+        setFines(data as PaidFine[]);
+      }
+      setLoading(false);
+    };
+
+    fetchPaidFines();
+  }, []);
+
+  const filteredFines = fines.filter(fine => {
+    const offenderName = fine.profiles && fine.profiles.length > 0 ? `${fine.profiles[0].first_name} ${fine.profiles[0].last_name}` : '';
+    return (
+      fine.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      offenderName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      fine.violation_type.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  });
 
   return (
     <div className="min-h-screen bg-background">
@@ -83,19 +122,35 @@ const PaidFines = () => {
                   <TableHead className="font-bold text-foreground">Offender</TableHead>
                   <TableHead className="font-bold text-foreground">Violation Type</TableHead>
                   <TableHead className="font-bold text-foreground text-right">Amount (N$)</TableHead>
-                  <TableHead className="font-bold text-foreground text-right">Date Paid</TableHead>
+                  <TableHead className="font-bold text-foreground text-right">Date Issued</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredFines.map((fine) => (
-                  <TableRow key={fine.id} className="hover:shadow-neumorphic-inset">
-                    <TableCell className="font-medium">{fine.id}</TableCell>
-                    <TableCell>{fine.offender}</TableCell>
-                    <TableCell>{fine.violation}</TableCell>
-                    <TableCell className="text-right">{fine.amount.toFixed(2)}</TableCell>
-                    <TableCell className="text-right">{fine.date}</TableCell>
+                {loading ? (
+                  Array.from({ length: 5 }).map((_, index) => (
+                    <TableRow key={index}>
+                      <TableCell><Skeleton className="h-5 w-24" /></TableCell>
+                      <TableCell><Skeleton className="h-5 w-32" /></TableCell>
+                      <TableCell><Skeleton className="h-5 w-40" /></TableCell>
+                      <TableCell className="text-right"><Skeleton className="h-5 w-20 ml-auto" /></TableCell>
+                      <TableCell className="text-right"><Skeleton className="h-5 w-28 ml-auto" /></TableCell>
+                    </TableRow>
+                  ))
+                ) : filteredFines.length > 0 ? (
+                  filteredFines.map((fine) => (
+                    <TableRow key={fine.id} className="hover:shadow-neumorphic-inset">
+                      <TableCell className="font-medium">{fine.id.substring(0, 8).toUpperCase()}</TableCell>
+                      <TableCell>{fine.profiles && fine.profiles.length > 0 ? `${fine.profiles[0].first_name} ${fine.profiles[0].last_name}` : 'N/A'}</TableCell>
+                      <TableCell>{fine.violation_type}</TableCell>
+                      <TableCell className="text-right">{fine.amount.toFixed(2)}</TableCell>
+                      <TableCell className="text-right">{new Date(fine.fine_date).toLocaleDateString()}</TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center">No paid fines found.</TableCell>
                   </TableRow>
-                ))}
+                )}
               </TableBody>
             </Table>
           </CardContent>

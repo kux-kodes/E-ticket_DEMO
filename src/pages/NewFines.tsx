@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -16,26 +16,70 @@ import { useNavigate } from 'react-router-dom';
 import Logo from "@/components/Logo";
 import { MadeWithDyad } from '@/components/made-with-dyad';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { supabase } from '@/integrations/supabase/client';
+import { showError } from '@/utils/toast';
+import { Skeleton } from '@/components/ui/skeleton';
 
-const newFinesData = [
-  { id: '#8433', offender: 'Michael Scott', violation: 'Illegal U-Turn', amount: 400.00, date: '2024-07-30', status: 'Outstanding' },
-  { id: '#8434', offender: 'Dwight Schrute', violation: 'Failure to yield', amount: 600.00, date: '2024-07-30', status: 'Outstanding' },
-  { id: '#8435', offender: 'Jim Halpert', violation: 'Speeding', amount: 750.00, date: '2024-07-30', status: 'Disputed' },
-  { id: '#8436', offender: 'Pam Beesly', violation: 'Parking in a no-parking zone', amount: 200.00, date: '2024-07-29', status: 'Outstanding' },
-  { id: '#8437', offender: 'Angela Martin', violation: 'Driving too slow', amount: 150.00, date: '2024-07-29', status: 'Overdue' },
-  { id: '#8438', offender: 'Kevin Malone', violation: 'Broken taillight', amount: 250.00, date: '2024-07-28', status: 'Outstanding' },
-];
+type NewFine = {
+  id: string;
+  violation_type: string;
+  amount: number;
+  fine_date: string;
+  status: string;
+  profiles: {
+    first_name: string;
+    last_name: string;
+  }[] | null;
+};
 
 const NewFines = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+  const [fines, setFines] = useState<NewFine[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filteredFines = newFinesData.filter(fine =>
-    fine.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    fine.offender.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    fine.violation.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    fine.status.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  useEffect(() => {
+    const fetchNewFines = async () => {
+      setLoading(true);
+      const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+      
+      const { data, error } = await supabase
+        .from('fines')
+        .select(`
+          id,
+          violation_type,
+          amount,
+          fine_date,
+          status,
+          profiles:user_id (
+            first_name,
+            last_name
+          )
+        `)
+        .gte('fine_date', sevenDaysAgo)
+        .order('fine_date', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching new fines:', error);
+        showError('Failed to fetch new fines.');
+      } else {
+        setFines(data as NewFine[]);
+      }
+      setLoading(false);
+    };
+
+    fetchNewFines();
+  }, []);
+
+  const filteredFines = fines.filter(fine => {
+    const offenderName = fine.profiles && fine.profiles.length > 0 ? `${fine.profiles[0].first_name} ${fine.profiles[0].last_name}` : '';
+    return (
+      fine.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      offenderName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      fine.violation_type.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      fine.status.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  });
 
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
@@ -75,7 +119,7 @@ const NewFines = () => {
           <CardHeader>
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
-                <CardTitle className="text-xl text-foreground">All Newly Issued Fines</CardTitle>
+                <CardTitle className="text-xl text-foreground">Fines Issued in Last 7 Days</CardTitle>
                 <CardDescription className="text-foreground/70">A record of all recently issued fines.</CardDescription>
               </div>
               <div className="relative w-full sm:w-64">
@@ -103,16 +147,33 @@ const NewFines = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredFines.map((fine) => (
-                  <TableRow key={fine.id} className="hover:shadow-neumorphic-inset">
-                    <TableCell className="font-medium">{fine.id}</TableCell>
-                    <TableCell>{fine.offender}</TableCell>
-                    <TableCell>{fine.violation}</TableCell>
-                    <TableCell className="text-right">{fine.amount.toFixed(2)}</TableCell>
-                    <TableCell>{fine.date}</TableCell>
-                    <TableCell>{getStatusBadge(fine.status)}</TableCell>
+                {loading ? (
+                  Array.from({ length: 5 }).map((_, index) => (
+                    <TableRow key={index}>
+                      <TableCell><Skeleton className="h-5 w-24" /></TableCell>
+                      <TableCell><Skeleton className="h-5 w-32" /></TableCell>
+                      <TableCell><Skeleton className="h-5 w-40" /></TableCell>
+                      <TableCell className="text-right"><Skeleton className="h-5 w-20 ml-auto" /></TableCell>
+                      <TableCell><Skeleton className="h-5 w-28" /></TableCell>
+                      <TableCell><Skeleton className="h-6 w-24" /></TableCell>
+                    </TableRow>
+                  ))
+                ) : filteredFines.length > 0 ? (
+                  filteredFines.map((fine) => (
+                    <TableRow key={fine.id} className="hover:shadow-neumorphic-inset">
+                      <TableCell className="font-medium">{fine.id.substring(0, 8).toUpperCase()}</TableCell>
+                      <TableCell>{fine.profiles && fine.profiles.length > 0 ? `${fine.profiles[0].first_name} ${fine.profiles[0].last_name}` : 'N/A'}</TableCell>
+                      <TableCell>{fine.violation_type}</TableCell>
+                      <TableCell className="text-right">{fine.amount.toFixed(2)}</TableCell>
+                      <TableCell>{new Date(fine.fine_date).toLocaleDateString()}</TableCell>
+                      <TableCell>{getStatusBadge(fine.status)}</TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center">No new fines found in the last 7 days.</TableCell>
                   </TableRow>
-                ))}
+                )}
               </TableBody>
             </Table>
           </CardContent>

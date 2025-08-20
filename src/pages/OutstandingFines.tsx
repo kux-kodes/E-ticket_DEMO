@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -16,25 +16,67 @@ import { useNavigate } from 'react-router-dom';
 import Logo from "@/components/Logo";
 import { MadeWithDyad } from '@/components/made-with-dyad';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { supabase } from '@/integrations/supabase/client';
+import { showError } from '@/utils/toast';
+import { Skeleton } from '@/components/ui/skeleton';
 
-const outstandingFinesData = [
-  { id: '#8433', offender: 'Michael Scott', violation: 'Illegal U-Turn', amount: 400.00, dueDate: '2024-08-15', status: 'Outstanding' },
-  { id: '#8434', offender: 'Dwight Schrute', violation: 'Failure to yield', amount: 600.00, dueDate: '2024-08-15', status: 'Outstanding' },
-  { id: '#8437', offender: 'Angela Martin', violation: 'Driving too slow', amount: 150.00, dueDate: '2024-07-20', status: 'Overdue' },
-  { id: '#8438', offender: 'Kevin Malone', violation: 'Broken taillight', amount: 250.00, dueDate: '2024-08-12', status: 'Outstanding' },
-  { id: '#8430', offender: 'Oscar Martinez', violation: 'Speeding', amount: 900.00, dueDate: '2024-07-15', status: 'Overdue' },
-];
+type OutstandingFine = {
+  id: string;
+  violation_type: string;
+  amount: number;
+  due_date: string;
+  status: string;
+  profiles: {
+    first_name: string;
+    last_name: string;
+  }[] | null;
+};
 
 const OutstandingFines = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+  const [fines, setFines] = useState<OutstandingFine[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filteredFines = outstandingFinesData.filter(fine =>
-    fine.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    fine.offender.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    fine.violation.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    fine.status.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  useEffect(() => {
+    const fetchOutstandingFines = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('fines')
+        .select(`
+          id,
+          violation_type,
+          amount,
+          due_date,
+          status,
+          profiles:user_id (
+            first_name,
+            last_name
+          )
+        `)
+        .in('status', ['outstanding', 'overdue']);
+
+      if (error) {
+        console.error('Error fetching outstanding fines:', error);
+        showError('Failed to fetch outstanding fines.');
+      } else {
+        setFines(data as OutstandingFine[]);
+      }
+      setLoading(false);
+    };
+
+    fetchOutstandingFines();
+  }, []);
+
+  const filteredFines = fines.filter(fine => {
+    const offenderName = fine.profiles && fine.profiles.length > 0 ? `${fine.profiles[0].first_name} ${fine.profiles[0].last_name}` : '';
+    return (
+      fine.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      offenderName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      fine.violation_type.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      fine.status.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  });
 
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
@@ -100,16 +142,33 @@ const OutstandingFines = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredFines.map((fine) => (
-                  <TableRow key={fine.id} className="hover:shadow-neumorphic-inset">
-                    <TableCell className="font-medium">{fine.id}</TableCell>
-                    <TableCell>{fine.offender}</TableCell>
-                    <TableCell>{fine.violation}</TableCell>
-                    <TableCell className="text-right">{fine.amount.toFixed(2)}</TableCell>
-                    <TableCell>{fine.dueDate}</TableCell>
-                    <TableCell>{getStatusBadge(fine.status)}</TableCell>
+                {loading ? (
+                  Array.from({ length: 5 }).map((_, index) => (
+                    <TableRow key={index}>
+                      <TableCell><Skeleton className="h-5 w-24" /></TableCell>
+                      <TableCell><Skeleton className="h-5 w-32" /></TableCell>
+                      <TableCell><Skeleton className="h-5 w-40" /></TableCell>
+                      <TableCell className="text-right"><Skeleton className="h-5 w-20 ml-auto" /></TableCell>
+                      <TableCell><Skeleton className="h-5 w-28" /></TableCell>
+                      <TableCell><Skeleton className="h-6 w-24" /></TableCell>
+                    </TableRow>
+                  ))
+                ) : filteredFines.length > 0 ? (
+                  filteredFines.map((fine) => (
+                    <TableRow key={fine.id} className="hover:shadow-neumorphic-inset">
+                      <TableCell className="font-medium">{fine.id.substring(0, 8).toUpperCase()}</TableCell>
+                      <TableCell>{fine.profiles && fine.profiles.length > 0 ? `${fine.profiles[0].first_name} ${fine.profiles[0].last_name}` : 'N/A'}</TableCell>
+                      <TableCell>{fine.violation_type}</TableCell>
+                      <TableCell className="text-right">{fine.amount.toFixed(2)}</TableCell>
+                      <TableCell>{new Date(fine.due_date).toLocaleDateString()}</TableCell>
+                      <TableCell>{getStatusBadge(fine.status)}</TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center">No outstanding fines found.</TableCell>
                   </TableRow>
-                ))}
+                )}
               </TableBody>
             </Table>
           </CardContent>

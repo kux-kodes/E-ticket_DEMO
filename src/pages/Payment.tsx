@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,12 +8,43 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Logo from "@/components/Logo";
 import { MadeWithDyad } from '@/components/made-with-dyad';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { myFinesData } from '@/lib/mockData';
+import { supabase } from '@/integrations/supabase/client';
+import { showError } from '@/utils/toast';
+import { Skeleton } from '@/components/ui/skeleton';
+
+type Fine = {
+  id: string;
+  violation_type: string;
+  amount: number;
+  fine_date: string;
+};
 
 const Payment = () => {
   const navigate = useNavigate();
   const { fineId } = useParams();
-  const fine = myFinesData.find(f => f.id === `#${fineId}`);
+  const [fine, setFine] = useState<Fine | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFine = async () => {
+      if (!fineId) return;
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('fines')
+        .select('id, violation_type, amount, fine_date')
+        .eq('id', fineId)
+        .single();
+
+      if (error || !data) {
+        showError('Failed to load fine details.');
+        setFine(null);
+      } else {
+        setFine(data);
+      }
+      setLoading(false);
+    };
+    fetchFine();
+  }, [fineId]);
 
   const handlePayment = (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,14 +52,6 @@ const Payment = () => {
     // For this demo, we'll just navigate to a success page.
     navigate('/payment-success');
   };
-
-  if (!fine) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Fine not found.</p>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -57,22 +80,39 @@ const Payment = () => {
               <CardTitle>Fine Details</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div>
-                <p className="text-sm text-foreground/70">Fine ID</p>
-                <p className="font-medium">{fine.id}</p>
-              </div>
-              <div>
-                <p className="text-sm text-foreground/70">Violation</p>
-                <p className="font-medium">{fine.violation}</p>
-              </div>
-              <div>
-                <p className="text-sm text-foreground/70">Date Issued</p>
-                <p className="font-medium">{fine.date}</p>
-              </div>
-              <div className="border-t border-border/50 pt-4 mt-4">
-                <p className="text-lg text-foreground/70">Total Amount</p>
-                <p className="text-3xl font-bold text-primary">N$ {fine.amount.toFixed(2)}</p>
-              </div>
+              {loading ? (
+                <div className="space-y-4">
+                  <Skeleton className="h-5 w-1/2" />
+                  <Skeleton className="h-5 w-1/3" />
+                  <Skeleton className="h-5 w-1/2" />
+                  <Skeleton className="h-5 w-1/3" />
+                  <div className="border-t border-border/50 pt-4 mt-4">
+                    <Skeleton className="h-6 w-1/3 mb-2" />
+                    <Skeleton className="h-10 w-1/2" />
+                  </div>
+                </div>
+              ) : !fine ? (
+                <p>Fine not found.</p>
+              ) : (
+                <>
+                  <div>
+                    <p className="text-sm text-foreground/70">Fine ID</p>
+                    <p className="font-medium">{fine.id.substring(0, 8).toUpperCase()}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-foreground/70">Violation</p>
+                    <p className="font-medium">{fine.violation_type}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-foreground/70">Date Issued</p>
+                    <p className="font-medium">{new Date(fine.fine_date).toLocaleDateString()}</p>
+                  </div>
+                  <div className="border-t border-border/50 pt-4 mt-4">
+                    <p className="text-lg text-foreground/70">Total Amount</p>
+                    <p className="text-3xl font-bold text-primary">N$ {fine.amount.toFixed(2)}</p>
+                  </div>
+                </>
+              )}
             </CardContent>
           </Card>
 
@@ -106,8 +146,8 @@ const Payment = () => {
                     </div>
                   </div>
                 </div>
-                <Button type="submit" className="w-full bg-primary text-primary-foreground">
-                  Pay N$ {fine.amount.toFixed(2)}
+                <Button type="submit" className="w-full bg-primary text-primary-foreground" disabled={loading || !fine}>
+                  {fine ? `Pay N$ ${fine.amount.toFixed(2)}` : 'Loading...'}
                 </Button>
               </CardContent>
             </form>
