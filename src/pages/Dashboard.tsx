@@ -5,6 +5,7 @@ import { DollarSign, Bell, Settings, LogOut, FilePlus, AlertTriangle, Clock } fr
 import Logo from "@/components/Logo";
 import FinesChart from "@/components/FinesChart";
 import { useNavigate } from "react-router-dom";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ const Dashboard = () => {
             <h1 className="text-3xl font-bold text-foreground">Traffic Enforcement Dashboard</h1>
           </div>
           <div className="flex items-center space-x-4">
+            <ThemeToggle />
             <Button variant="ghost" size="icon">
               <Bell className="h-5 w-5" />
             </Button>

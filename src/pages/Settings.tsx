@@ -9,6 +9,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Logo from "@/components/Logo";
 import { MadeWithDyad } from '@/components/made-with-dyad';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -21,13 +22,16 @@ const Settings = () => {
             <Logo size="medium" />
             <h1 className="text-3xl font-bold text-foreground">Settings</h1>
           </div>
-          <Button 
-            variant="ghost" 
-            onClick={() => navigate('/dashboard')}
-          >
-            <ArrowLeft className="mr-2 h-5 w-5" />
-            Back to Dashboard
-          </Button>
+          <div className="flex items-center space-x-4">
+            <ThemeToggle />
+            <Button 
+              variant="ghost" 
+              onClick={() => navigate('/dashboard')}
+            >
+              <ArrowLeft className="mr-2 h-5 w-5" />
+              Back to Dashboard
+            </Button>
+          </div>
         </div>
       </header>
       <main className="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
