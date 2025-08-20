@@ -29,12 +29,12 @@ const SignUp = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#06404c] to-[#0a5a6a] p-4">
-      <Card className="w-full max-w-lg border-0 shadow-2xl bg-white/95 backdrop-blur">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <Card className="w-full max-w-lg shadow-lg">
         <CardHeader className="text-center pb-8">
           <Logo size="xl" className="mx-auto mb-6" />
-          <CardTitle className="text-3xl text-[#06404c] mb-2">Create Account</CardTitle>
-          <CardDescription className="text-[#06404c]/80 text-lg">
+          <CardTitle className="text-3xl text-foreground mb-2">Create Account</CardTitle>
+          <CardDescription className="text-muted-foreground text-lg">
             Join DRIVA today
           </CardDescription>
         </CardHeader>
@@ -43,31 +43,31 @@ const SignUp = () => {
           <CardContent className="space-y-6 px-8">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="firstName" className="text-[#06404c] font-medium">First Name</Label>
+                <Label htmlFor="firstName">First Name</Label>
                 <div className="relative">
-                  <User className="absolute left-3 top-3.5 h-5 w-5 text-[#06404c]/60" />
+                  <User className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground" />
                   <Input
                     id="firstName"
                     type="text"
                     placeholder="First name"
                     value={formData.firstName}
                     onChange={(e) => handleChange('firstName', e.target.value)}
-                    className="pl-12 h-12 border-[#06404c]/20 focus:border-[#bcdc49] focus:ring-[#bcdc49] text-lg"
+                    className="pl-12 h-12 text-lg"
                     required
                   />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="lastName" className="text-[#06404c] font-medium">Last Name</Label>
+                <Label htmlFor="lastName">Last Name</Label>
                 <div className="relative">
-                  <User className="absolute left-3 top-3.5 h-5 w-5 text-[#06404c]/60" />
+                  <User className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground" />
                   <Input
                     id="lastName"
                     type="text"
                     placeholder="Last name"
                     value={formData.lastName}
                     onChange={(e) => handleChange('lastName', e.target.value)}
-                    className="pl-12 h-12 border-[#06404c]/20 focus:border-[#bcdc49] focus:ring-[#bcdc49] text-lg"
+                    className="pl-12 h-12 text-lg"
                     required
                   />
                 </div>
@@ -75,70 +75,70 @@ const SignUp = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-[#06404c] font-medium">Email Address</Label>
+              <Label htmlFor="email">Email Address</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3.5 h-5 w-5 text-[#06404c]/60" />
+                <Mail className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground" />
                 <Input
                   id="email"
                   type="email"
                   placeholder="Enter your email"
                   value={formData.email}
                   onChange={(e) => handleChange('email', e.target.value)}
-                  className="pl-12 h-12 border-[#06404c]/20 focus:border-[#bcdc49] focus:ring-[#bcdc49] text-lg"
+                  className="pl-12 h-12 text-lg"
                   required
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone" className="text-[#06404c] font-medium">Phone Number</Label>
+              <Label htmlFor="phone">Phone Number</Label>
               <div className="relative">
-                <Phone className="absolute left-3 top-3.5 h-5 w-5 text-[#06404c]/60" />
+                <Phone className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground" />
                 <Input
                   id="phone"
                   type="tel"
                   placeholder="Enter your phone number"
                   value={formData.phone}
                   onChange={(e) => handleChange('phone', e.target.value)}
-                  className="pl-12 h-12 border-[#06404c]/20 focus:border-[#bcdc49] focus:ring-[#bcdc49] text-lg"
+                  className="pl-12 h-12 text-lg"
                   required
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="address" className="text-[#06404c] font-medium">Address</Label>
+              <Label htmlFor="address">Address</Label>
               <div className="relative">
-                <MapPin className="absolute left-3 top-3.5 h-5 w-5 text-[#06404c]/60" />
+                <MapPin className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground" />
                 <Input
                   id="address"
                   type="text"
                   placeholder="Enter your address"
                   value={formData.address}
                   onChange={(e) => handleChange('address', e.target.value)}
-                  className="pl-12 h-12 border-[#06404c]/20 focus:border-[#bcdc49] focus:ring-[#bcdc49] text-lg"
+                  className="pl-12 h-12 text-lg"
                   required
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-[#06404c] font-medium">Password</Label>
+              <Label htmlFor="password">Password</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3.5 h-5 w-5 text-[#06404c]/60" />
+                <Lock className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground" />
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Create a password"
                   value={formData.password}
                   onChange={(e) => handleChange('password', e.target.value)}
-                  className="pl-12 h-12 border-[#06404c]/20 focus:border-[#bcdc49] focus:ring-[#bcdc49] text-lg pr-12"
+                  className="pl-12 h-12 text-lg pr-12"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-3.5 text-[#06404c]/60 hover:text-[#06404c] transition-colors"
+                  className="absolute right-3 top-3.5 text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
@@ -146,22 +146,22 @@ const SignUp = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword" className="text-[#06404c] font-medium">Confirm Password</Label>
+              <Label htmlFor="confirmPassword">Confirm Password</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-3.5 h-5 w-5 text-[#06404c]/60" />
+                <Lock className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground" />
                 <Input
                   id="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="Confirm your password"
                   value={formData.confirmPassword}
                   onChange={(e) => handleChange('confirmPassword', e.target.value)}
-                  className="pl-12 h-12 border-[#06404c]/20 focus:border-[#bcdc49] focus:ring-[#bcdc49] text-lg pr-12"
+                  className="pl-12 h-12 text-lg pr-12"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-3.5 text-[#06404c]/60 hover:text-[#06404c] transition-colors"
+                  className="absolute right-3 top-3.5 text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
@@ -171,14 +171,14 @@ const SignUp = () => {
           <CardFooter className="flex flex-col px-8 pb-8">
             <Button 
               type="submit" 
-              className="w-full h-12 bg-[#06404c] hover:bg-[#06404c]/90 text-white text-lg font-medium shadow-lg transition-all hover:shadow-xl"
+              className="w-full h-12 text-lg font-medium"
             >
               Create Account
             </Button>
             <div className="mt-6 text-center">
-              <p className="text-sm text-[#06404c]/70">
+              <p className="text-sm text-muted-foreground">
                 Already have an account?{' '}
-                <a href="/sign-in" className="text-[#bcdc49] hover:text-[#bcdc49]/80 font-medium transition-colors">
+                <a href="/sign-in" className="text-primary hover:text-primary/80 font-medium transition-colors">
                   Sign in here
                 </a>
               </p>

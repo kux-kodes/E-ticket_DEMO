@@ -21,21 +21,20 @@ const Logo = ({ size = "medium", className = "" }: { size?: "small" | "medium" |
           cx="50"
           cy="50"
           r="45"
-          fill="#06404c"
-          stroke="#bcdc49"
+          className="fill-primary stroke-primary-foreground"
           strokeWidth="4"
         />
         
         {/* D letter design */}
         <path
           d="M30 25 L30 75 L55 75 C65 75 70 65 70 50 C70 35 65 25 55 25 L30 25 Z"
-          fill="#bcdc49"
+          className="fill-primary-foreground"
         />
         
         {/* Inner accent */}
         <path
           d="M35 35 L35 65 L50 65 C57 65 60 60 60 50 C60 40 57 35 50 35 L35 35 Z"
-          fill="#06404c"
+          className="fill-primary"
         />
       </svg>
     </div>

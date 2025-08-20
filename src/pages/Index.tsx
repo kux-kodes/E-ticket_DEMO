@@ -60,25 +60,23 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#06404c] via-[#0a5a6a] to-[#06404c]">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Navigation */}
-      <nav className="bg-white/10 backdrop-blur-md border-b border-white/20">
+      <nav className="bg-card border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
               <Logo size="medium" />
-              <span className="text-xl font-bold text-white">DRIVA</span>
+              <span className="text-xl font-bold text-foreground">DRIVA</span>
             </div>
             <div className="flex items-center space-x-4">
               <Button 
                 variant="ghost" 
-                className="text-white hover:text-[#bcdc49] hover:bg-white/10"
                 onClick={() => navigate('/sign-in')}
               >
                 Login
               </Button>
               <Button 
-                className="bg-[#bcdc49] hover:bg-[#bcdc49]/90 text-[#06404c] font-medium"
                 onClick={() => navigate('/sign-up')}
               >
                 Register
@@ -91,19 +89,19 @@ const Index = () => {
       {/* Hero Section */}
       <section className="pt-20 pb-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
+          <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
             Modernizing Traffic Enforcement,
             <br />
-            <span className="text-[#bcdc49]">One Fine at a Time.</span>
+            <span className="text-primary">One Fine at a Time.</span>
           </h1>
-          <p className="text-xl text-white/80 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
             DRIVA replaces manual ticketing and Excel databases with a seamless,
             digital system for issuing, tracking, and settling traffic fines.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
               size="lg" 
-              className="bg-[#bcdc49] hover:bg-[#bcdc49]/90 text-[#06404c] text-lg font-medium px-8 py-6"
+              className="text-lg font-medium px-8 py-6"
               onClick={() => navigate('/sign-up')}
             >
               Officer Portal
@@ -112,7 +110,7 @@ const Index = () => {
             <Button 
               size="lg" 
               variant="outline"
-              className="border-white/30 text-white hover:bg-white/10 text-lg font-medium px-8 py-6"
+              className="text-lg font-medium px-8 py-6"
             >
               Pay a Fine
             </Button>
@@ -121,23 +119,23 @@ const Index = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white/5">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-secondary">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">A Smarter System for Safer Roads</h2>
-            <p className="text-xl text-white/70">Powerful features for officers and citizens alike.</p>
+            <h2 className="text-4xl font-bold text-foreground mb-4">A Smarter System for Safer Roads</h2>
+            <p className="text-xl text-muted-foreground">Powerful features for officers and citizens alike.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <Card key={index} className="bg-white/10 border-white/20 backdrop-blur-sm">
+              <Card key={index}>
                 <CardHeader>
-                  <div className="w-12 h-12 bg-[#bcdc49]/20 rounded-lg flex items-center justify-center mb-4">
-                    <feature.icon className="h-6 w-6 text-[#bcdc49]" />
+                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                    <feature.icon className="h-6 w-6 text-primary" />
                   </div>
-                  <CardTitle className="text-white text-xl">{feature.title}</CardTitle>
+                  <CardTitle className="text-foreground text-xl">{feature.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <CardDescription className="text-white/70">
+                  <CardDescription>
                     {feature.description}
                   </CardDescription>
                 </CardContent>
@@ -152,45 +150,45 @@ const Index = () => {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
             <div>
-              <div className="text-4xl font-bold text-[#bcdc49] mb-2">50,000+</div>
-              <div className="text-white/70">Fines Processed</div>
+              <div className="text-4xl font-bold text-primary mb-2">50,000+</div>
+              <div className="text-muted-foreground">Fines Processed</div>
             </div>
             <div>
-              <div className="text-4xl font-bold text-[#bcdc49] mb-2">95%</div>
-              <div className="text-white/70">Faster Processing</div>
+              <div className="text-4xl font-bold text-primary mb-2">95%</div>
+              <div className="text-muted-foreground">Faster Processing</div>
             </div>
             <div>
-              <div className="text-4xl font-bold text-[#bcdc49] mb-2">14</div>
-              <div className="text-white/70">Regions Covered</div>
+              <div className="text-4xl font-bold text-primary mb-2">14</div>
+              <div className="text-muted-foreground">Regions Covered</div>
             </div>
             <div>
-              <div className="text-4xl font-bold text-[#bcdc49] mb-2">99.9%</div>
-              <div className="text-white/70">System Uptime</div>
+              <div className="text-4xl font-bold text-primary mb-2">99.9%</div>
+              <div className="text-muted-foreground">System Uptime</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white/5">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-secondary">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-white mb-4">Trusted by Law Enforcement</h2>
-            <p className="text-xl text-white/70">See what officials and citizens are saying.</p>
+            <h2 className="text-4xl font-bold text-foreground mb-4">Trusted by Law Enforcement</h2>
+            <p className="text-xl text-muted-foreground">See what officials and citizens are saying.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <Card key={index} className="bg-white/10 border-white/20 backdrop-blur-sm">
+              <Card key={index}>
                 <CardContent className="pt-6">
                   <div className="flex items-center mb-4">
                     {[...Array(5)].map((_, i) => (
-                      <CheckCircle key={i} className="h-5 w-5 text-[#bcdc49] fill-current" />
+                      <CheckCircle key={i} className="h-5 w-5 text-primary fill-current" />
                     ))}
                   </div>
-                  <p className="text-white/80 mb-4 italic">"{testimonial.content}"</p>
+                  <p className="text-muted-foreground mb-4 italic">"{testimonial.content}"</p>
                   <div>
-                    <div className="text-white font-medium">{testimonial.name}</div>
-                    <div className="text-white/60 text-sm">{testimonial.role}</div>
+                    <div className="text-foreground font-medium">{testimonial.name}</div>
+                    <div className="text-muted-foreground text-sm">{testimonial.role}</div>
                   </div>
                 </CardContent>
               </Card>
@@ -202,13 +200,13 @@ const Index = () => {
       {/* CTA Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold text-white mb-4">Ready to Modernize Your Traffic System?</h2>
-          <p className="text-xl text-white/70 mb-8">
+          <h2 className="text-4xl font-bold text-foreground mb-4">Ready to Modernize Your Traffic System?</h2>
+          <p className="text-xl text-muted-foreground mb-8">
             Join the digital transformation of traffic enforcement.
           </p>
           <Button 
             size="lg" 
-            className="bg-[#bcdc49] hover:bg-[#bcdc49]/90 text-[#06404c] text-xl font-medium px-10 py-6"
+            className="text-xl font-medium px-10 py-6"
             onClick={() => navigate('/sign-up')}
           >
             Register Your Department
@@ -218,17 +216,17 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-white/5 border-t border-white/20 py-12">
+      <footer className="bg-secondary border-t py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-3 mb-4 md:mb-0">
               <Logo size="small" />
-              <span className="text-xl font-bold text-white">DRIVA</span>
+              <span className="text-xl font-bold text-foreground">DRIVA</span>
             </div>
             <div className="flex space-x-6">
-              <a href="#" className="text-white/60 hover:text-white transition-colors">Privacy</a>
-              <a href="#" className="text-white/60 hover:text-white transition-colors">Terms</a>
-              <a href="#" className="text-white/60 hover:text-white transition-colors">Support</a>
+              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Privacy</a>
+              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Terms</a>
+              <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">Support</a>
             </div>
           </div>
           <div className="text-center mt-8">
