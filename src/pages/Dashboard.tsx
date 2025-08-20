@@ -80,17 +80,25 @@ const Dashboard = () => {
             </CardFooter>
           </Card>
           
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="text-sm font-medium text-[#06404c]">Pending Disputes</CardTitle>
               <div className="p-2 bg-[#bcdc49]/20 rounded-lg">
                 <AlertTriangle className="h-5 w-5 text-[#bcdc49]" />
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-grow">
               <div className="text-3xl font-bold text-[#06404c]">14</div>
               <p className="text-sm text-[#06404c]/70 mt-1">3 new since yesterday</p>
             </CardContent>
+            <CardFooter>
+              <Button
+                className="w-full bg-[#06404c] hover:bg-[#06404c]/90 text-white"
+                onClick={() => navigate('/pending-disputes')}
+              >
+                View All Disputes
+              </Button>
+            </CardFooter>
           </Card>
           
           <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
