@@ -24,19 +24,19 @@ const FinesChart = () => {
             bottom: 5,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(90, 103, 121, 0.1)" />
-          <XAxis dataKey="name" stroke="#5a6779" />
-          <YAxis stroke="#5a6779" />
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(6, 64, 76, 0.1)" />
+          <XAxis dataKey="name" stroke="hsl(var(--foreground))" />
+          <YAxis stroke="hsl(var(--foreground))" />
           <Tooltip
             contentStyle={{
               backgroundColor: 'hsl(var(--background))',
               borderColor: 'hsl(var(--primary))',
               color: 'hsl(var(--foreground))'
             }}
-            cursor={{ fill: 'rgba(74, 144, 226, 0.2)' }}
+            cursor={{ fill: 'rgba(188, 220, 73, 0.2)' }}
           />
-          <Legend />
-          <Bar dataKey="fines" fill="#4a90e2" name="Fines Issued" />
+          <Legend wrapperStyle={{ color: 'hsl(var(--foreground))' }} />
+          <Bar dataKey="fines" fill="#bcdc49" name="Fines Issued" />
         </BarChart>
       </ResponsiveContainer>
     </div>

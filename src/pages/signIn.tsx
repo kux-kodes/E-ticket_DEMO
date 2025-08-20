@@ -5,8 +5,10 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import Logo from "@/components/Logo";
+import { useNavigate } from 'react-router-dom';
 
 const SignIn = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -20,13 +22,17 @@ const SignIn = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Sign in data:', formData);
+    // TODO: Add actual sign-in logic
+    navigate('/dashboard');
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <Logo size="xl" className="mx-auto mb-6" />
+          <div className="w-20 h-20 bg-background shadow-neumorphic rounded-full flex items-center justify-center mx-auto mb-6">
+            <Logo size="large" />
+          </div>
           <CardTitle className="text-3xl text-foreground mb-2">Welcome Back</CardTitle>
           <CardDescription className="text-foreground/80 text-lg">
             Sign in to your DRIVA account
@@ -34,7 +40,7 @@ const SignIn = () => {
         </CardHeader>
 
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-6 px-2">
+          <CardContent className="space-y-6 px-6">
             <div className="space-y-2">
               <Label htmlFor="email" className="text-foreground font-medium">Email Address</Label>
               <div className="relative">
@@ -91,7 +97,7 @@ const SignIn = () => {
               </a>
             </div>
           </CardContent>
-          <CardFooter className="flex flex-col px-2">
+          <CardFooter className="flex flex-col px-6 pb-6">
             <Button 
               type="submit" 
               className="w-full h-12 bg-primary text-primary-foreground text-lg font-medium"

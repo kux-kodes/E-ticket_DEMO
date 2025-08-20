@@ -5,8 +5,10 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Eye, EyeOff, User, Mail, Lock, Phone, MapPin } from 'lucide-react';
 import Logo from "@/components/Logo";
+import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -26,13 +28,17 @@ const SignUp = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Sign up data:', formData);
+    // TODO: Add actual sign-up logic
+    navigate('/dashboard');
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-lg">
         <CardHeader className="text-center">
-          <Logo size="xl" className="mx-auto mb-6" />
+          <div className="w-20 h-20 bg-background shadow-neumorphic rounded-full flex items-center justify-center mx-auto mb-6">
+            <Logo size="large" />
+          </div>
           <CardTitle className="text-3xl text-foreground mb-2">Create Account</CardTitle>
           <CardDescription className="text-foreground/80 text-lg">
             Join DRIVA today
@@ -40,8 +46,8 @@ const SignUp = () => {
         </CardHeader>
 
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-6 px-2">
-            <div className="grid grid-cols-2 gap-4">
+          <CardContent className="space-y-6 px-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="firstName" className="text-foreground font-medium">First Name</Label>
                 <div className="relative">
@@ -168,7 +174,7 @@ const SignUp = () => {
               </div>
             </div>
           </CardContent>
-          <CardFooter className="flex flex-col px-2">
+          <CardFooter className="flex flex-col px-6 pb-6">
             <Button 
               type="submit" 
               className="w-full h-12 bg-primary text-primary-foreground text-lg font-medium"
