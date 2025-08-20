@@ -4,53 +4,96 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, CreditCard, Calendar, Lock } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import Logo from "@/components/Logo";
 import { MadeWithDyad } from '@/components/made-with-dyad';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { supabase } from '@/integrations/supabase/client';
-import { showError } from '@/utils/toast';
+import { showError, showLoading, dismissToast, showSuccess } from '@/utils/toast';
 import { Skeleton } from '@/components/ui/skeleton';
 
-type Fine = {
-  id: string;
-  violation_type: string;
-  amount: number;
-  fine_date: string;
+type FineSummary = {
+  ids: string[];
+  totalAmount: number;
+  description: string;
 };
 
 const Payment = () => {
   const navigate = useNavigate();
-  const { fineId } = useParams();
-  const [fine, setFine] = useState<Fine | null>(null);
+  const location = useLocation();
+  const { fineId: singleFineId } = useParams();
+
+  const [summary, setSummary] = useState<FineSummary | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchFine = async () => {
-      if (!fineId) return;
+    const fetchFineDetails = async () => {
       setLoading(true);
-      const { data, error } = await supabase
-        .from('fines')
-        .select('id, violation_type, amount, fine_date')
-        .eq('id', fineId)
-        .single();
+      const fromState = location.state as { fineIds: string[], totalAmount: number };
 
-      if (error || !data) {
-        showError('Failed to load fine details.');
-        setFine(null);
+      if (fromState?.fineIds?.length > 0) {
+        setSummary({
+          ids: fromState.fineIds,
+          totalAmount: fromState.totalAmount,
+          description: `${fromState.fineIds.length} fine(s) selected`,
+        });
+      } else if (singleFineId) {
+        const { data, error } = await supabase
+          .from('fines')
+          .select('id, violation_type, amount')
+          .eq('id', singleFineId)
+          .single();
+        
+        if (error || !data) {
+          showError('Failed to load fine details.');
+          setSummary(null);
+        } else {
+          setSummary({
+            ids: [data.id],
+            totalAmount: data.amount,
+            description: data.violation_type,
+          });
+        }
       } else {
-        setFine(data);
+        showError('No fine selected for payment.');
+        navigate('/my-fines');
       }
       setLoading(false);
     };
-    fetchFine();
-  }, [fineId]);
+    fetchFineDetails();
+  }, [singleFineId, location.state, navigate]);
 
-  const handlePayment = (e: React.FormEvent) => {
+  const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, you would process the payment here.
-    // For this demo, we'll just navigate to a success page.
-    navigate('/payment-success');
+    if (!summary || summary.ids.length === 0) return;
+
+    const toastId = showLoading('Processing payment...');
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      showError('You must be logged in to pay fines.');
+      dismissToast(toastId);
+      return;
+    }
+
+    try {
+      const { error } = await supabase.functions.invoke('pay-fines', {
+        body: JSON.stringify({
+          fineIds: summary.ids,
+          userId: user.id,
+          paymentMethod: 'Credit Card', // Mocked for now
+        }),
+      });
+
+      if (error) throw error;
+
+      dismissToast(toastId);
+      showSuccess('Payment successful!');
+      navigate('/payment-success');
+    } catch (error: any) {
+      dismissToast(toastId);
+      showError(`Payment failed: ${error.message}`);
+    }
   };
 
   return (
@@ -63,12 +106,8 @@ const Payment = () => {
           </div>
           <div className="flex items-center space-x-4">
             <ThemeToggle />
-            <Button 
-              variant="ghost" 
-              onClick={() => navigate('/my-fines')}
-            >
-              <ArrowLeft className="mr-2 h-5 w-5" />
-              Back to My Fines
+            <Button variant="ghost" onClick={() => navigate('/my-fines')}>
+              <ArrowLeft className="mr-2 h-5 w-5" /> Back to My Fines
             </Button>
           </div>
         </div>
@@ -76,40 +115,24 @@ const Payment = () => {
       <main className="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <Card>
-            <CardHeader>
-              <CardTitle>Fine Details</CardTitle>
-            </CardHeader>
+            <CardHeader><CardTitle>Payment Summary</CardTitle></CardHeader>
             <CardContent className="space-y-4">
               {loading ? (
                 <div className="space-y-4">
-                  <Skeleton className="h-5 w-1/2" />
-                  <Skeleton className="h-5 w-1/3" />
-                  <Skeleton className="h-5 w-1/2" />
-                  <Skeleton className="h-5 w-1/3" />
-                  <div className="border-t border-border/50 pt-4 mt-4">
-                    <Skeleton className="h-6 w-1/3 mb-2" />
-                    <Skeleton className="h-10 w-1/2" />
-                  </div>
+                  <Skeleton className="h-5 w-2/3" />
+                  <div className="border-t pt-4 mt-4"><Skeleton className="h-10 w-1/2" /></div>
                 </div>
-              ) : !fine ? (
-                <p>Fine not found.</p>
+              ) : !summary ? (
+                <p>No fine details available.</p>
               ) : (
                 <>
                   <div>
-                    <p className="text-sm text-foreground/70">Fine ID</p>
-                    <p className="font-medium">{fine.id.substring(0, 8).toUpperCase()}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-foreground/70">Violation</p>
-                    <p className="font-medium">{fine.violation_type}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-foreground/70">Date Issued</p>
-                    <p className="font-medium">{new Date(fine.fine_date).toLocaleDateString()}</p>
+                    <p className="text-sm text-foreground/70">Details</p>
+                    <p className="font-medium">{summary.description}</p>
                   </div>
                   <div className="border-t border-border/50 pt-4 mt-4">
                     <p className="text-lg text-foreground/70">Total Amount</p>
-                    <p className="text-3xl font-bold text-primary">N$ {fine.amount.toFixed(2)}</p>
+                    <p className="text-3xl font-bold text-primary">N$ {summary.totalAmount.toFixed(2)}</p>
                   </div>
                 </>
               )}
@@ -146,8 +169,8 @@ const Payment = () => {
                     </div>
                   </div>
                 </div>
-                <Button type="submit" className="w-full bg-primary text-primary-foreground" disabled={loading || !fine}>
-                  {fine ? `Pay N$ ${fine.amount.toFixed(2)}` : 'Loading...'}
+                <Button type="submit" className="w-full bg-primary text-primary-foreground" disabled={loading || !summary}>
+                  {summary ? `Pay N$ ${summary.totalAmount.toFixed(2)}` : 'Loading...'}
                 </Button>
               </CardContent>
             </form>

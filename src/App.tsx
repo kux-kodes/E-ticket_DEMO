@@ -23,6 +23,7 @@ import Payment from "./pages/Payment";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import FineDetails from "./pages/FineDetails";
 import DisputeReview from "./pages/DisputeReview";
+import Emergency from "./pages/Emergency";
 
 const queryClient = new QueryClient();
 
@@ -65,9 +66,11 @@ const App = () => {
                 <Route path="/citizen-dashboard" element={<CitizenDashboard />} />
                 <Route path="/my-fines" element={<MyFines />} />
                 <Route path="/dispute-fine/:fineId" element={<DisputeFine />} />
+                <Route path="/payment" element={<Payment />} />
                 <Route path="/payment/:fineId" element={<Payment />} />
                 <Route path="/payment-success" element={<PaymentSuccess />} />
                 <Route path="/fine-details/:fineId" element={<FineDetails />} />
+                <Route path="/emergency" element={<Emergency />} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />

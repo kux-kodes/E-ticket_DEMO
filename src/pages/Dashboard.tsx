@@ -1,8 +1,9 @@
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { DollarSign, Settings, LogOut, FilePlus, AlertTriangle, Clock } from 'lucide-react';
+import { DollarSign, Settings, LogOut, FilePlus, AlertTriangle, Clock, Download } from 'lucide-react';
 import Logo from "@/components/Logo";
+import NampolLogo from "@/components/NampolLogo";
 import { useNavigate } from "react-router-dom";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Notifications } from "@/components/Notifications";
@@ -21,6 +22,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { jsPDF } from "jspdf";
+import { showError } from "@/utils/toast";
 
 // Mock data generation to simulate dynamic data fetching
 const generateChartData = (timeRange: string) => {
@@ -60,6 +63,21 @@ const Dashboard = () => {
     setPieChartData(pieData);
   }, [timeRange]);
 
+  const handleDownloadPdf = () => {
+    // NOTE: This is a placeholder for a more complex PDF generation logic.
+    // A full implementation would capture chart images and format data into tables.
+    try {
+      const doc = new jsPDF();
+      doc.text("DRIVA - Traffic Enforcement Report", 20, 20);
+      doc.text(`Time Range: ${timeRange}`, 20, 30);
+      doc.text("This is a placeholder for the full report.", 20, 40);
+      doc.save("driva-report.pdf");
+    } catch (error) {
+      showError("Failed to generate PDF report.");
+      console.error(error);
+    }
+  };
+
   const recentActivity = [
     { title: "New fine issued to N12345W", time: "2 minutes ago", path: "/new-fines" },
     { title: "Payment received for fine #8432", time: "15 minutes ago", path: "/paid-fines" },
@@ -73,31 +91,17 @@ const Dashboard = () => {
         <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex justify-between items-center">
           <div className="flex items-center space-x-4">
             <Logo size="medium" />
+            <NampolLogo />
             <h1 className="text-3xl font-bold text-foreground">Traffic Enforcement Dashboard</h1>
           </div>
           <div className="flex items-center space-x-4">
             <ThemeToggle />
             <Notifications />
-            <Button 
-              variant="ghost" 
-              size="icon"
-              onClick={() => navigate('/settings')}
-            >
-              <Settings className="h-5 w-5" />
-            </Button>
+            <Button variant="ghost" size="icon" onClick={() => navigate('/settings')}><Settings className="h-5 w-5" /></Button>
             <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <LogOut className="h-5 w-5" />
-                </Button>
-              </AlertDialogTrigger>
+              <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><LogOut className="h-5 w-5" /></Button></AlertDialogTrigger>
               <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you sure you want to log out?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    You will be returned to the homepage.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
+                <AlertDialogHeader><AlertDialogTitle>Are you sure you want to log out?</AlertDialogTitle></AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
                   <AlertDialogAction onClick={() => navigate('/')}>Logout</AlertDialogAction>
@@ -109,95 +113,26 @@ const Dashboard = () => {
       </header>
       
       <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h2 className="text-2xl font-semibold text-foreground mb-2">Welcome back, Officer!</h2>
-          <p className="text-foreground/70">Here is a summary of today's traffic enforcement activity.</p>
+        <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-8">
+          <div>
+            <h2 className="text-2xl font-semibold text-foreground mb-2">Welcome back, Officer!</h2>
+            <p className="text-foreground/70">Here is a summary of traffic enforcement activity.</p>
+          </div>
+          <div className="flex gap-4">
+            <Select>
+              <SelectTrigger className="w-[180px]"><SelectValue placeholder="Select District" /></SelectTrigger>
+              <SelectContent><SelectItem value="khomas">Khomas</SelectItem></SelectContent>
+            </Select>
+            <Button variant="outline" onClick={handleDownloadPdf}><Download className="mr-2 h-4 w-4" /> Download Report</Button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="flex flex-col">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-              <CardTitle className="text-sm font-medium text-foreground">Fines Collected (Today)</CardTitle>
-              <div className="p-2 shadow-neumorphic-inset rounded-lg">
-                <DollarSign className="h-5 w-5 text-primary" />
-              </div>
-            </CardHeader>
-            <CardContent className="flex-grow">
-              <div className="text-3xl font-bold text-foreground">N$12,450</div>
-              <p className="text-sm text-foreground/70 mt-1">+15.2% from yesterday</p>
-            </CardContent>
-            <CardFooter>
-              <Button
-                className="w-full"
-                onClick={() => navigate('/paid-fines')}
-              >
-                View All Fines
-              </Button>
-            </CardFooter>
-          </Card>
-          
-          <Card className="flex flex-col">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-              <CardTitle className="text-sm font-medium text-foreground">New Fines Issued (Today)</CardTitle>
-              <div className="p-2 shadow-neumorphic-inset rounded-lg">
-                <FilePlus className="h-5 w-5 text-primary" />
-              </div>
-            </CardHeader>
-            <CardContent className="flex-grow">
-              <div className="text-3xl font-bold text-foreground">+82</div>
-              <p className="text-sm text-foreground/70 mt-1">+5% from yesterday</p>
-            </CardContent>
-            <CardFooter>
-              <Button
-                className="w-full"
-                onClick={() => navigate('/new-fines')}
-              >
-                View All Fines
-              </Button>
-            </CardFooter>
-          </Card>
-          
-          <Card className="flex flex-col">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-              <CardTitle className="text-sm font-medium text-foreground">Pending Disputes</CardTitle>
-              <div className="p-2 shadow-neumorphic-inset rounded-lg">
-                <AlertTriangle className="h-5 w-5 text-primary" />
-              </div>
-            </CardHeader>
-            <CardContent className="flex-grow">
-              <div className="text-3xl font-bold text-foreground">14</div>
-              <p className="text-sm text-foreground/70 mt-1">3 new since yesterday</p>
-            </CardContent>
-            <CardFooter>
-              <Button
-                className="w-full"
-                onClick={() => navigate('/pending-disputes')}
-              >
-                View All Disputes
-              </Button>
-            </CardFooter>
-          </Card>
-          
-          <Card className="flex flex-col">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-              <CardTitle className="text-sm font-medium text-foreground">Total Outstanding Fines</CardTitle>
-              <div className="p-2 shadow-neumorphic-inset rounded-lg">
-                <Clock className="h-5 w-5 text-primary" />
-              </div>
-            </CardHeader>
-            <CardContent className="flex-grow">
-              <div className="text-3xl font-bold text-foreground">1,253</div>
-              <p className="text-sm text-foreground/70 mt-1">Total value: N$250,600</p>
-            </CardContent>
-            <CardFooter>
-              <Button
-                className="w-full"
-                onClick={() => navigate('/outstanding-fines')}
-              >
-                View All Fines
-              </Button>
-            </CardFooter>
-          </Card>
+          {/* Stat Cards */}
+          <Card><CardHeader><CardTitle>Fines Collected</CardTitle></CardHeader><CardContent><div className="text-3xl font-bold">N$12,450</div></CardContent><CardFooter><Button className="w-full" onClick={() => navigate('/paid-fines')}>View Fines</Button></CardFooter></Card>
+          <Card><CardHeader><CardTitle>New Fines Issued</CardTitle></CardHeader><CardContent><div className="text-3xl font-bold">+82</div></CardContent><CardFooter><Button className="w-full" onClick={() => navigate('/new-fines')}>View Fines</Button></CardFooter></Card>
+          <Card><CardHeader><CardTitle>Pending Disputes</CardTitle></CardHeader><CardContent><div className="text-3xl font-bold">14</div></CardContent><CardFooter><Button className="w-full" onClick={() => navigate('/pending-disputes')}>View Disputes</Button></CardFooter></Card>
+          <Card><CardHeader><CardTitle>Outstanding Fines</CardTitle></CardHeader><CardContent><div className="text-3xl font-bold">1,253</div></CardContent><CardFooter><Button className="w-full" onClick={() => navigate('/outstanding-fines')}>View Fines</Button></CardFooter></Card>
         </div>
         
         <div className="space-y-8">
@@ -208,9 +143,7 @@ const Dashboard = () => {
                 <CardDescription className="text-foreground/70">View trends and breakdowns of traffic fines.</CardDescription>
               </div>
               <Select value={timeRange} onValueChange={setTimeRange}>
-                <SelectTrigger className="w-full sm:w-[180px]">
-                  <SelectValue placeholder="Select time range" />
-                </SelectTrigger>
+                <SelectTrigger className="w-full sm:w-[180px]"><SelectValue placeholder="Select time range" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="7d">Last 7 Days</SelectItem>
                   <SelectItem value="30d">Last 30 Days</SelectItem>
@@ -231,21 +164,12 @@ const Dashboard = () => {
           </Card>
           
           <Card>
-            <CardHeader>
-              <CardTitle className="text-xl text-foreground">Recent Activity</CardTitle>
-              <CardDescription className="text-foreground/70">Latest fines, payments, and disputes</CardDescription>
-            </CardHeader>
+            <CardHeader><CardTitle className="text-xl text-foreground">Recent Activity</CardTitle></CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {recentActivity.map((item, index) => (
-                  <div 
-                    key={index} 
-                    className="flex items-start space-x-3 p-3 rounded-lg hover:shadow-neumorphic-inset transition-shadow cursor-pointer"
-                    onClick={() => navigate(item.path)}
-                  >
-                    <div className="shadow-neumorphic-inset p-2 rounded-full mt-0.5">
-                      <div className="bg-primary w-2 h-2 rounded-full"></div>
-                    </div>
+                  <div key={index} className="flex items-start space-x-3 p-3 rounded-lg hover:shadow-neumorphic-inset cursor-pointer" onClick={() => navigate(item.path)}>
+                    <div className="shadow-neumorphic-inset p-2 rounded-full mt-0.5"><div className="bg-primary w-2 h-2 rounded-full"></div></div>
                     <div className="flex-1">
                       <p className="text-sm font-medium text-foreground">{item.title}</p>
                       <p className="text-xs text-foreground/60">{item.time}</p>

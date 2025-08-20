@@ -1,7 +1,7 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, FileText, ShieldCheck, Gavel } from 'lucide-react';
+import { ArrowRight, FileText, ShieldCheck, Gavel, Siren } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Logo from "@/components/Logo";
 import { MadeWithDyad } from '@/components/made-with-dyad';
@@ -96,17 +96,30 @@ const CitizenDashboard = () => {
           </Card>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Manage Your Fines</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-foreground/70 mb-4">View a detailed list of all your fines, pay outstanding amounts, or submit a dispute if you believe there has been an error.</p>
-            <Button onClick={() => navigate('/my-fines')}>
-              View My Fines <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </CardContent>
-        </Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Manage Your Fines</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-foreground/70 mb-4">View, pay, or dispute your traffic fines.</p>
+              <Button onClick={() => navigate('/my-fines')}>
+                View My Fines <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Emergency Contacts</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-foreground/70 mb-4">Quickly access emergency service numbers.</p>
+              <Button variant="outline" onClick={() => navigate('/emergency')}>
+                <Siren className="mr-2 h-4 w-4" /> View Contacts
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
       </main>
       <MadeWithDyad />
     </div>
