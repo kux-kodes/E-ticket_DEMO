@@ -1,11 +1,14 @@
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { DollarSign, Bell, Settings, LogOut, FilePlus, AlertTriangle, Clock } from 'lucide-react';
 import Logo from "@/components/Logo";
 import FinesChart from "@/components/FinesChart";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-[#06404c] shadow-lg">
@@ -35,17 +38,25 @@ const Dashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow flex flex-col">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="text-sm font-medium text-[#06404c]">Fines Collected (Today)</CardTitle>
               <div className="p-2 bg-[#bcdc49]/20 rounded-lg">
                 <DollarSign className="h-5 w-5 text-[#bcdc49]" />
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-grow">
               <div className="text-3xl font-bold text-[#06404c]">N$12,450</div>
               <p className="text-sm text-[#06404c]/70 mt-1">+15.2% from yesterday</p>
             </CardContent>
+            <CardFooter>
+              <Button
+                className="w-full bg-[#06404c] hover:bg-[#06404c]/90 text-white"
+                onClick={() => navigate('/paid-fines')}
+              >
+                View All Fines
+              </Button>
+            </CardFooter>
           </Card>
           
           <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow">
