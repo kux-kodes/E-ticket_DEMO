@@ -103,7 +103,7 @@ const Index = () => {
             <Button 
               size="lg" 
               className="text-primary-foreground bg-primary text-lg font-medium px-8 py-6"
-              onClick={() => navigate('/sign-up')}
+              onClick={() => navigate('/sign-in')}
             >
               Officer Portal
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -112,6 +112,7 @@ const Index = () => {
               size="lg" 
               variant="outline"
               className="text-lg font-medium px-8 py-6"
+              onClick={() => navigate('/sign-in')}
             >
               Pay a Fine
             </Button>

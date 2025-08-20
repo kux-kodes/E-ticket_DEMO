@@ -16,6 +16,9 @@ import OutstandingFines from "./pages/OutstandingFines";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import { ThemeProvider } from "@/components/theme-provider";
+import CitizenDashboard from "./pages/CitizenDashboard";
+import MyFines from "./pages/MyFines";
+import DisputeFine from "./pages/DisputeFine";
 
 const queryClient = new QueryClient();
 
@@ -44,12 +47,20 @@ const App = () => {
                 <Route path="/" element={<Index />} />
                 <Route path="/sign-in" element={<SignIn />} />
                 <Route path="/sign-up" element={<SignUp />} />
+                
+                {/* Officer Routes */}
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/paid-fines" element={<PaidFines />} />
                 <Route path="/new-fines" element={<NewFines />} />
                 <Route path="/pending-disputes" element={<PendingDisputes />} />
                 <Route path="/outstanding-fines" element={<OutstandingFines />} />
                 <Route path="/settings" element={<Settings />} />
+
+                {/* Citizen Routes */}
+                <Route path="/citizen-dashboard" element={<CitizenDashboard />} />
+                <Route path="/my-fines" element={<MyFines />} />
+                <Route path="/dispute-fine/:fineId" element={<DisputeFine />} />
+
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

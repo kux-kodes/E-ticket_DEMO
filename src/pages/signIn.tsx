@@ -22,8 +22,13 @@ const SignIn = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Sign in data:', formData);
-    // TODO: Add actual sign-in logic
-    navigate('/dashboard');
+    // TODO: Add actual sign-in logic with role-based redirect
+    // For now, redirecting based on email content for demonstration
+    if (formData.email.includes('officer')) {
+      navigate('/dashboard');
+    } else {
+      navigate('/citizen-dashboard');
+    }
   };
 
   return (
