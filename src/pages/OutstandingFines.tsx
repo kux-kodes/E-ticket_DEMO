@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -10,7 +10,8 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft } from 'lucide-react';
+import { Input } from "@/components/ui/input";
+import { ArrowLeft, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Logo from "@/components/Logo";
 import { MadeWithDyad } from '@/components/made-with-dyad';
@@ -26,6 +27,14 @@ const outstandingFinesData = [
 
 const OutstandingFines = () => {
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredFines = outstandingFinesData.filter(fine =>
+    fine.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    fine.offender.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    fine.violation.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    fine.status.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
@@ -61,8 +70,22 @@ const OutstandingFines = () => {
       <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <Card>
           <CardHeader>
-            <CardTitle className="text-xl text-foreground">All Outstanding Fines</CardTitle>
-            <CardDescription className="text-foreground/70">A record of all unpaid and overdue fines.</CardDescription>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div>
+                <CardTitle className="text-xl text-foreground">All Outstanding Fines</CardTitle>
+                <CardDescription className="text-foreground/70">A record of all unpaid and overdue fines.</CardDescription>
+              </div>
+              <div className="relative w-full sm:w-64">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/60" />
+                <Input
+                  type="search"
+                  placeholder="Search fines..."
+                  className="pl-10"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             <Table>
@@ -77,7 +100,7 @@ const OutstandingFines = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {outstandingFinesData.map((fine) => (
+                {filteredFines.map((fine) => (
                   <TableRow key={fine.id} className="hover:shadow-neumorphic-inset">
                     <TableCell className="font-medium">{fine.id}</TableCell>
                     <TableCell>{fine.offender}</TableCell>

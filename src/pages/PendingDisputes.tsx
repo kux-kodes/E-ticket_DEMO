@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -9,7 +9,8 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Eye } from 'lucide-react';
+import { Input } from "@/components/ui/input";
+import { ArrowLeft, Eye, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Logo from "@/components/Logo";
 import { MadeWithDyad } from '@/components/made-with-dyad';
@@ -24,6 +25,13 @@ const pendingDisputesData = [
 
 const PendingDisputes = () => {
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredDisputes = pendingDisputesData.filter(dispute =>
+    dispute.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    dispute.offender.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    dispute.violation.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-background">
@@ -48,8 +56,22 @@ const PendingDisputes = () => {
       <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <Card>
           <CardHeader>
-            <CardTitle className="text-xl text-foreground">All Pending Disputes</CardTitle>
-            <CardDescription className="text-foreground/70">Review and resolve outstanding fine disputes.</CardDescription>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div>
+                <CardTitle className="text-xl text-foreground">All Pending Disputes</CardTitle>
+                <CardDescription className="text-foreground/70">Review and resolve outstanding fine disputes.</CardDescription>
+              </div>
+              <div className="relative w-full sm:w-64">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/60" />
+                <Input
+                  type="search"
+                  placeholder="Search disputes..."
+                  className="pl-10"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             <Table>
@@ -63,7 +85,7 @@ const PendingDisputes = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {pendingDisputesData.map((dispute) => (
+                {filteredDisputes.map((dispute) => (
                   <TableRow key={dispute.id} className="hover:shadow-neumorphic-inset">
                     <TableCell className="font-medium">{dispute.id}</TableCell>
                     <TableCell>{dispute.offender}</TableCell>
