@@ -42,7 +42,7 @@ const Dashboard = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-[#06404c]">$12,450</div>
+              <div className="text-3xl font-bold text-[#06404c]">N$12,450</div>
               <p className="text-sm text-[#06404c]/70 mt-1">+15.2% from yesterday</p>
             </CardContent>
           </Card>
@@ -82,7 +82,7 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-[#06404c]">1,253</div>
-              <p className="text-sm text-[#06404c]/70 mt-1">Total value: $250,600</p>
+              <p className="text-sm text-[#06404c]/70 mt-1">Total value: N$250,600</p>
             </CardContent>
           </Card>
         </div>
