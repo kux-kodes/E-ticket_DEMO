@@ -1,11 +1,12 @@
 import { MadeWithDyad } from "@/components/made-with-dyad";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { DollarSign, Bell, Settings, LogOut, FilePlus, AlertTriangle, Clock } from 'lucide-react';
+import { DollarSign, Settings, LogOut, FilePlus, AlertTriangle, Clock } from 'lucide-react';
 import Logo from "@/components/Logo";
 import FinesChart from "@/components/FinesChart";
 import { useNavigate } from "react-router-dom";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { Notifications } from "@/components/Notifications";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -20,9 +21,7 @@ const Dashboard = () => {
           </div>
           <div className="flex items-center space-x-4">
             <ThemeToggle />
-            <Button variant="ghost" size="icon">
-              <Bell className="h-5 w-5" />
-            </Button>
+            <Notifications />
             <Button 
               variant="ghost" 
               size="icon"
