@@ -16,14 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import Logo from "@/components/Logo";
 import { MadeWithDyad } from '@/components/made-with-dyad';
 import { ThemeToggle } from '@/components/theme-toggle';
-
-const myFinesData = [
-  { id: '#8435', violation: 'Speeding', amount: 750.00, date: '2024-07-30', status: 'Disputed' },
-  { id: '#8433', violation: 'Illegal U-Turn', amount: 400.00, date: '2024-07-28', status: 'Outstanding' },
-  { id: '#8430', violation: 'Speeding', amount: 900.00, date: '2024-07-15', status: 'Overdue' },
-  { id: '#8421', violation: 'Illegal Parking', amount: 250.00, date: '2024-07-10', status: 'Paid' },
-  { id: '#8415', violation: 'Running a red light', amount: 1000.00, date: '2024-07-05', status: 'Paid' },
-];
+import { myFinesData } from '@/lib/mockData';
 
 const MyFines = () => {
   const navigate = useNavigate();
@@ -117,7 +110,7 @@ const MyFines = () => {
                           <Button variant="ghost" size="sm" onClick={() => navigate(`/dispute-fine/${fine.id.replace('#', '')}`)}>Dispute</Button>
                         </div>
                       ) : (
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" onClick={() => navigate(`/fine-details/${fine.id.replace('#', '')}`)}>
                           <Eye className="mr-2 h-4 w-4" />
                           View
                         </Button>

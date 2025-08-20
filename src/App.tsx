@@ -21,6 +21,7 @@ import MyFines from "./pages/MyFines";
 import DisputeFine from "./pages/DisputeFine";
 import Payment from "./pages/Payment";
 import PaymentSuccess from "./pages/PaymentSuccess";
+import FineDetails from "./pages/FineDetails";
 
 const queryClient = new QueryClient();
 
@@ -64,6 +65,7 @@ const App = () => {
                 <Route path="/dispute-fine/:fineId" element={<DisputeFine />} />
                 <Route path="/payment/:fineId" element={<Payment />} />
                 <Route path="/payment-success" element={<PaymentSuccess />} />
+                <Route path="/fine-details/:fineId" element={<FineDetails />} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
