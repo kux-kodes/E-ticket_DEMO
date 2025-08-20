@@ -13,6 +13,7 @@ import PaidFines from "./pages/PaidFines";
 import NewFines from "./pages/NewFines";
 import PendingDisputes from "./pages/PendingDisputes";
 import OutstandingFines from "./pages/OutstandingFines";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const App = () => {
               <Route path="/new-fines" element={<NewFines />} />
               <Route path="/pending-disputes" element={<PendingDisputes />} />
               <Route path="/outstanding-fines" element={<OutstandingFines />} />
+              <Route path="/settings" element={<Settings />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -21,7 +21,11 @@ const Dashboard = () => {
             <Button variant="ghost" className="text-white hover:text-[#bcdc49] hover:bg-white/10">
               <Bell className="h-5 w-5" />
             </Button>
-            <Button variant="ghost" className="text-white hover:text-[#bcdc49] hover:bg-white/10">
+            <Button 
+              variant="ghost" 
+              className="text-white hover:text-[#bcdc49] hover:bg-white/10"
+              onClick={() => navigate('/settings')}
+            >
               <Settings className="h-5 w-5" />
             </Button>
             <Button variant="ghost" className="text-white hover:text-[#bcdc49] hover:bg-white/10">
