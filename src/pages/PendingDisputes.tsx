@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -15,19 +15,67 @@ import { useNavigate } from 'react-router-dom';
 import Logo from "@/components/Logo";
 import { MadeWithDyad } from '@/components/made-with-dyad';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { myFinesData } from '@/lib/mockData';
+import { supabase } from '@/integrations/supabase/client';
+import { showError } from '@/utils/toast';
+import { Skeleton } from '@/components/ui/skeleton';
+
+type Dispute = {
+  fine_id: string;
+  submitted_at: string;
+  fines: {
+    violation_type: string;
+    profiles: {
+      first_name: string;
+      last_name: string;
+    } | null;
+  } | null;
+};
 
 const PendingDisputes = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+  const [disputes, setDisputes] = useState<Dispute[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const pendingDisputesData = myFinesData.filter(fine => fine.status.toLowerCase() === 'disputed');
+  useEffect(() => {
+    const fetchDisputes = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('disputes')
+        .select(`
+          fine_id,
+          submitted_at,
+          fines (
+            violation_type,
+            profiles (
+              first_name,
+              last_name
+            )
+          )
+        `)
+        .eq('status', 'pending');
 
-  const filteredDisputes = pendingDisputesData.filter(dispute =>
-    dispute.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    dispute.offender.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    dispute.violation.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+      if (error) {
+        console.error('Error fetching disputes:', error);
+        showError('Failed to fetch pending disputes.');
+      } else if (data) {
+        setDisputes(data);
+      }
+      setLoading(false);
+    };
+
+    fetchDisputes();
+  }, []);
+
+  const filteredDisputes = disputes.filter(dispute => {
+    const offenderName = dispute.fines?.profiles ? `${dispute.fines.profiles.first_name} ${dispute.fines.profiles.last_name}` : 'Unknown';
+    const violation = dispute.fines?.violation_type || '';
+    return (
+      dispute.fine_id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      offenderName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      violation.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  });
 
   return (
     <div className="min-h-screen bg-background">
@@ -81,24 +129,40 @@ const PendingDisputes = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredDisputes.map((dispute) => (
-                  <TableRow key={dispute.id} className="hover:shadow-neumorphic-inset">
-                    <TableCell className="font-medium">{dispute.id}</TableCell>
-                    <TableCell>{dispute.offender}</TableCell>
-                    <TableCell>{dispute.violation}</TableCell>
-                    <TableCell>{dispute.date}</TableCell>
-                    <TableCell className="text-right">
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => navigate(`/dispute-review/${dispute.id.replace('#', '')}`)}
-                      >
-                        <Eye className="mr-2 h-4 w-4" />
-                        Review
-                      </Button>
-                    </TableCell>
+                {loading ? (
+                  Array.from({ length: 5 }).map((_, index) => (
+                    <TableRow key={index}>
+                      <TableCell><Skeleton className="h-5 w-24" /></TableCell>
+                      <TableCell><Skeleton className="h-5 w-32" /></TableCell>
+                      <TableCell><Skeleton className="h-5 w-40" /></TableCell>
+                      <TableCell><Skeleton className="h-5 w-28" /></TableCell>
+                      <TableCell className="text-right"><Skeleton className="h-8 w-24 ml-auto" /></TableCell>
+                    </TableRow>
+                  ))
+                ) : filteredDisputes.length > 0 ? (
+                  filteredDisputes.map((dispute) => (
+                    <TableRow key={dispute.fine_id} className="hover:shadow-neumorphic-inset">
+                      <TableCell className="font-medium">{dispute.fine_id.substring(0, 8).toUpperCase()}</TableCell>
+                      <TableCell>{dispute.fines?.profiles ? `${dispute.fines.profiles.first_name} ${dispute.fines.profiles.last_name}` : 'N/A'}</TableCell>
+                      <TableCell>{dispute.fines?.violation_type || 'N/A'}</TableCell>
+                      <TableCell>{new Date(dispute.submitted_at).toLocaleDateString()}</TableCell>
+                      <TableCell className="text-right">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => navigate(`/dispute-review/${dispute.fine_id}`)}
+                        >
+                          <Eye className="mr-2 h-4 w-4" />
+                          Review
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center">No pending disputes found.</TableCell>
                   </TableRow>
-                ))}
+                )}
               </TableBody>
             </Table>
           </CardContent>
