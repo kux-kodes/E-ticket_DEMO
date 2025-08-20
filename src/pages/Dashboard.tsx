@@ -3,13 +3,51 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { DollarSign, Settings, LogOut, FilePlus, AlertTriangle, Clock } from 'lucide-react';
 import Logo from "@/components/Logo";
-import FinesChart from "@/components/FinesChart";
 import { useNavigate } from "react-router-dom";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Notifications } from "@/components/Notifications";
+import { useState, useEffect } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import FinesTrendChart from "@/components/FinesTrendChart";
+import ViolationsPieChart from "@/components/ViolationsPieChart";
+
+// Mock data generation to simulate dynamic data fetching
+const generateChartData = (timeRange: string) => {
+  const pieData = [
+    { name: 'Speeding', value: Math.floor(Math.random() * 100) + 350 },
+    { name: 'Illegal Parking', value: Math.floor(Math.random() * 100) + 250 },
+    { name: 'Red Light', value: Math.floor(Math.random() * 80) + 180 },
+    { name: 'No License', value: Math.floor(Math.random() * 50) + 120 },
+    { name: 'Other', value: Math.floor(Math.random() * 50) + 80 },
+  ];
+
+  let days = 7;
+  if (timeRange === '30d') days = 30;
+  if (timeRange === '90d') days = 90;
+
+  const trendData = Array.from({ length: days }, (_, i) => {
+    const date = new Date();
+    date.setDate(date.getDate() - (days - 1 - i));
+    return {
+      name: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      fines: Math.floor(Math.random() * 50) + 50,
+    };
+  });
+
+  return { trendData, pieData };
+};
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [timeRange, setTimeRange] = useState('7d');
+  const [trendChartData, setTrendChartData] = useState<{ name: string; fines: number }[]>([]);
+  const [pieChartData, setPieChartData] = useState<{ name: string; value: number }[]>([]);
+
+  useEffect(() => {
+    const { trendData, pieData } = generateChartData(timeRange);
+    setTrendChartData(trendData);
+    setPieChartData(pieData);
+  }, [timeRange]);
 
   const recentActivity = [
     { title: "New fine issued to N12345W", time: "2 minutes ago", path: "/new-fines" },
@@ -135,14 +173,33 @@ const Dashboard = () => {
           </Card>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <CardTitle className="text-xl text-foreground">Fines Issued Over Time</CardTitle>
-              <CardDescription className="text-foreground/70">Daily fines issued this week</CardDescription>
+        <div className="space-y-8">
+          <Card>
+            <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <CardTitle className="text-xl text-foreground">Analytics Overview</CardTitle>
+                <CardDescription className="text-foreground/70">View trends and breakdowns of traffic fines.</CardDescription>
+              </div>
+              <Select value={timeRange} onValueChange={setTimeRange}>
+                <SelectTrigger className="w-full sm:w-[180px]">
+                  <SelectValue placeholder="Select time range" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="7d">Last 7 Days</SelectItem>
+                  <SelectItem value="30d">Last 30 Days</SelectItem>
+                  <SelectItem value="90d">Last 90 Days</SelectItem>
+                </SelectContent>
+              </Select>
             </CardHeader>
-            <CardContent>
-              <FinesChart />
+            <CardContent className="grid grid-cols-1 lg:grid-cols-5 gap-8 pt-6">
+              <div className="lg:col-span-3">
+                <h3 className="font-semibold text-lg mb-4 text-foreground">Fines Trend</h3>
+                <FinesTrendChart data={trendChartData} />
+              </div>
+              <div className="lg:col-span-2">
+                <h3 className="font-semibold text-lg mb-4 text-foreground">Top Violations</h3>
+                <ViolationsPieChart data={pieChartData} />
+              </div>
             </CardContent>
           </Card>
           
