@@ -7,7 +7,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Upload, File as FileIcon, X } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Logo from "@/components/Logo";
-import { MadeWithDyad } from '@/components/made-with-dyad';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { showSuccess } from '@/utils/toast';
 
@@ -149,7 +148,6 @@ const DisputeFine = () => {
           </CardContent>
         </Card>
       </main>
-      <MadeWithDyad />
     </div>
   );
 };

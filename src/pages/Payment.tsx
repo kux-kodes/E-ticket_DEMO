@@ -6,7 +6,6 @@ import { Label } from "@/components/ui/label";
 import { ArrowLeft, CreditCard, Calendar, Lock } from 'lucide-react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import Logo from "@/components/Logo";
-import { MadeWithDyad } from '@/components/made-with-dyad';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { supabase } from '@/integrations/supabase/client';
 import { showError, showLoading, dismissToast, showSuccess } from '@/utils/toast';
@@ -177,7 +176,6 @@ const Payment = () => {
           </Card>
         </div>
       </main>
-      <MadeWithDyad />
     </div>
   );
 };

@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Logo from "@/components/Logo";
-import { MadeWithDyad } from '@/components/made-with-dyad';
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
@@ -41,7 +40,6 @@ const PaymentSuccess = () => {
           </CardContent>
         </Card>
       </main>
-      <MadeWithDyad />
     </div>
   );
 };

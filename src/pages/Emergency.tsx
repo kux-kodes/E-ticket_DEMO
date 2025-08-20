@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Phone, Siren, Ambulance, Building } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Logo from "@/components/Logo";
-import { MadeWithDyad } from '@/components/made-with-dyad';
 import { ThemeToggle } from '@/components/theme-toggle';
 
 const emergencyServices = [
@@ -63,7 +62,6 @@ const Emergency = () => {
           </CardContent>
         </Card>
       </main>
-      <MadeWithDyad />
     </div>
   );
 };

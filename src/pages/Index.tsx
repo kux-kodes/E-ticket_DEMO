@@ -1,4 +1,3 @@
-import { MadeWithDyad } from "@/components/made-with-dyad";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { FileText, Database, Users, LayoutDashboard, ShieldCheck, Gavel, ArrowRight, CheckCircle } from 'lucide-react';
@@ -231,8 +230,8 @@ const Index = () => {
               <a href="#" className="text-foreground/60 hover:text-foreground transition-colors">Support</a>
             </div>
           </div>
-          <div className="text-center mt-8">
-            <MadeWithDyad />
+          <div className="text-center text-sm text-foreground/60 mt-8">
+            &copy; {new Date().getFullYear()} DRIVA. All rights reserved.
           </div>
         </div>
       </footer>

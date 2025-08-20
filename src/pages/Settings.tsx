@@ -8,7 +8,6 @@ import { Switch } from "@/components/ui/switch";
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Logo from "@/components/Logo";
-import { MadeWithDyad } from '@/components/made-with-dyad';
 import { ThemeToggle } from '@/components/theme-toggle';
 
 const Settings = () => {
@@ -114,7 +113,6 @@ const Settings = () => {
           </Card>
         </div>
       </main>
-      <MadeWithDyad />
     </div>
   );
 };

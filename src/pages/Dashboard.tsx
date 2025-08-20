@@ -1,7 +1,6 @@
-import { MadeWithDyad } from "@/components/made-with-dyad";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { DollarSign, Settings, LogOut, FilePlus, AlertTriangle, Clock, Download } from 'lucide-react';
+import { Settings, LogOut, Download } from 'lucide-react';
 import Logo from "@/components/Logo";
 import NampolLogo from "@/components/NampolLogo";
 import { useNavigate } from "react-router-dom";
@@ -16,7 +15,6 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -181,7 +179,6 @@ const Dashboard = () => {
           </Card>
         </div>
       </main>
-      <MadeWithDyad />
     </div>
   );
 };

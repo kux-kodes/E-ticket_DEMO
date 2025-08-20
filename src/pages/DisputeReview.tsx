@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, User, Car, AlertTriangle, DollarSign, Calendar, MapPin, Shield, Download, FileText, Check, X } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Logo from "@/components/Logo";
-import { MadeWithDyad } from '@/components/made-with-dyad';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Separator } from '@/components/ui/separator';
 import { Label } from '@/components/ui/label';
@@ -248,7 +247,6 @@ const DisputeReview = () => {
           </>
         )}
       </main>
-      <MadeWithDyad />
     </div>
   );
 };

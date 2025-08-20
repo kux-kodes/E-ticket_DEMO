@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, FileText, ShieldCheck, Gavel, Siren } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Logo from "@/components/Logo";
-import { MadeWithDyad } from '@/components/made-with-dyad';
 import { ThemeToggle } from '@/components/theme-toggle';
 import {
   AlertDialog,
@@ -121,7 +120,6 @@ const CitizenDashboard = () => {
           </Card>
         </div>
       </main>
-      <MadeWithDyad />
     </div>
   );
 };

@@ -14,7 +14,6 @@ import { Input } from "@/components/ui/input";
 import { ArrowLeft, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Logo from "@/components/Logo";
-import { MadeWithDyad } from '@/components/made-with-dyad';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { supabase } from '@/integrations/supabase/client';
 import { showError } from '@/utils/toast';
@@ -174,7 +173,6 @@ const OutstandingFines = () => {
           </CardContent>
         </Card>
       </main>
-      <MadeWithDyad />
     </div>
   );
 };

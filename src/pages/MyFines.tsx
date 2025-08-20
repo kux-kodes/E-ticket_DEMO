@@ -15,7 +15,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowLeft, Search, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Logo from "@/components/Logo";
-import { MadeWithDyad } from '@/components/made-with-dyad';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { supabase } from '@/integrations/supabase/client';
 import { showError } from '@/utils/toast';
@@ -228,7 +227,6 @@ const MyFines = () => {
           </CardContent>
         </Card>
       </main>
-      <MadeWithDyad />
     </div>
   );
 };

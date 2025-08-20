@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, User, Car, AlertTriangle, DollarSign, Calendar, MapPin, Shield } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Logo from "@/components/Logo";
-import { MadeWithDyad } from '@/components/made-with-dyad';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { supabase } from '@/integrations/supabase/client';
 import { showError } from '@/utils/toast';
@@ -203,7 +202,6 @@ const FineDetails = () => {
           )}
         </Card>
       </main>
-      <MadeWithDyad />
     </div>
   );
 };
