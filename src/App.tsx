@@ -22,6 +22,7 @@ import DisputeFine from "./pages/DisputeFine";
 import Payment from "./pages/Payment";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import FineDetails from "./pages/FineDetails";
+import DisputeReview from "./pages/DisputeReview";
 
 const queryClient = new QueryClient();
 
@@ -58,6 +59,7 @@ const App = () => {
                 <Route path="/pending-disputes" element={<PendingDisputes />} />
                 <Route path="/outstanding-fines" element={<OutstandingFines />} />
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/dispute-review/:fineId" element={<DisputeReview />} />
 
                 {/* Citizen Routes */}
                 <Route path="/citizen-dashboard" element={<CitizenDashboard />} />

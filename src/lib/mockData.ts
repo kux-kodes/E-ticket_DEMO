@@ -11,7 +11,12 @@ export const finesData = [
     status: 'Disputed',
     location: 'Independence Avenue, Windhoek',
     officer: 'Sgt. A. Shipanga',
-    officerBadge: 'TP54321'
+    officerBadge: 'TP54321',
+    disputeReason: 'The speed limit sign was obscured by a tree branch. I have photographic evidence showing the obstructed sign. I was driving at what I believed to be the correct speed limit for that area.',
+    disputeEvidence: [
+        { name: 'obstructed_sign.jpg', url: '/placeholder.svg' },
+        { name: 'dashboard_cam_footage.mp4', url: '#' }
+    ]
   },
   { 
     id: '#8433', 
@@ -71,6 +76,58 @@ export const finesData = [
     officer: 'Insp. M. Kavari',
     officerBadge: 'TP12345'
   },
+  {
+    id: '#8420',
+    offender: 'Andy Bernard',
+    licensePlate: 'N 222 COR',
+    violation: 'Illegal Parking',
+    description: 'Parked in a commercial loading zone.',
+    amount: 250.00,
+    date: '2024-07-29',
+    dueDate: '2024-08-29',
+    status: 'Disputed',
+    location: 'Nelson Mandela Avenue',
+    officer: 'Sgt. A. Shipanga',
+    officerBadge: 'TP54321',
+    disputeReason: 'I was actively unloading equipment for my a cappella group performance. The sign allows for 15 minutes of loading, and I was there for less than 10. My bandmates can corroborate.',
+    disputeEvidence: [
+        { name: 'unloading_photo.jpg', url: '/placeholder.svg' }
+    ]
+  },
+  {
+    id: '#8411',
+    offender: 'Stanley Hudson',
+    licensePlate: 'N 333 SUD',
+    violation: 'Running a red light',
+    description: 'Failed to stop at a red traffic signal.',
+    amount: 1000.00,
+    date: '2024-07-28',
+    dueDate: '2024-08-28',
+    status: 'Disputed',
+    location: 'Robert Mugabe Ave & Laurent-Désiré Kabila St intersection',
+    officer: 'Insp. M. Kavari',
+    officerBadge: 'TP12345',
+    disputeReason: 'It was pretzel day. I was distracted. However, the light was yellow when I entered the intersection, not red. The traffic camera timing must be incorrect.',
+    disputeEvidence: []
+  },
+  {
+    id: '#8401',
+    offender: 'Phyllis Vance',
+    licensePlate: 'N 444 VAN',
+    violation: 'Failure to signal',
+    description: 'Changed lanes without signaling.',
+    amount: 200.00,
+    date: '2024-07-27',
+    dueDate: '2024-08-27',
+    status: 'Disputed',
+    location: 'Hosea Kutako Drive',
+    officer: 'Sgt. A. Shipanga',
+    officerBadge: 'TP54321',
+    disputeReason: 'My turn signal is faulty. I have a receipt from the mechanic dated the day after the incident showing that I had it repaired. This was a mechanical failure, not negligence.',
+    disputeEvidence: [
+        { name: 'mechanic_receipt.pdf', url: '#' }
+    ]
+  }
 ];
 
 export const myFinesData = finesData;

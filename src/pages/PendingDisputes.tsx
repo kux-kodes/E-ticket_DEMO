@@ -15,17 +15,13 @@ import { useNavigate } from 'react-router-dom';
 import Logo from "@/components/Logo";
 import { MadeWithDyad } from '@/components/made-with-dyad';
 import { ThemeToggle } from '@/components/theme-toggle';
-
-const pendingDisputesData = [
-  { id: '#8435', offender: 'Jim Halpert', violation: 'Speeding', amount: 750.00, date: '2024-07-30' },
-  { id: '#8420', offender: 'Andy Bernard', violation: 'Illegal Parking', amount: 250.00, date: '2024-07-29' },
-  { id: '#8411', offender: 'Stanley Hudson', violation: 'Running a red light', amount: 1000.00, date: '2024-07-28' },
-  { id: '#8401', offender: 'Phyllis Vance', violation: 'Failure to signal', amount: 200.00, date: '2024-07-27' },
-];
+import { myFinesData } from '@/lib/mockData';
 
 const PendingDisputes = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+
+  const pendingDisputesData = myFinesData.filter(fine => fine.status.toLowerCase() === 'disputed');
 
   const filteredDisputes = pendingDisputesData.filter(dispute =>
     dispute.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -92,7 +88,11 @@ const PendingDisputes = () => {
                     <TableCell>{dispute.violation}</TableCell>
                     <TableCell>{dispute.date}</TableCell>
                     <TableCell className="text-right">
-                      <Button variant="outline" size="sm">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => navigate(`/dispute-review/${dispute.id.replace('#', '')}`)}
+                      >
                         <Eye className="mr-2 h-4 w-4" />
                         Review
                       </Button>
