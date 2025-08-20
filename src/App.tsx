@@ -26,6 +26,8 @@ import DisputeReview from "./pages/DisputeReview";
 import Emergency from "./pages/Emergency";
 import DepartmentRegistration from "./pages/DepartmentRegistration";
 import DepartmentRegistrationSuccess from "./pages/DepartmentRegistrationSuccess";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import DepartmentRequests from "./pages/admin/DepartmentRequests";
 
 const queryClient = new QueryClient();
 
@@ -75,6 +77,10 @@ const App = () => {
                 <Route path="/payment-success" element={<PaymentSuccess />} />
                 <Route path="/fine-details/:fineId" element={<FineDetails />} />
                 <Route path="/emergency" element={<Emergency />} />
+
+                {/* Admin Routes */}
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/department-requests" element={<DepartmentRequests />} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Settings, LogOut, Download } from 'lucide-react';
+import { Settings, LogOut, Download, Shield } from 'lucide-react';
 import Logo from "@/components/Logo";
 import NampolLogo from "@/components/NampolLogo";
 import { useNavigate } from "react-router-dom";
@@ -55,15 +55,7 @@ const Dashboard = () => {
   const [trendChartData, setTrendChartData] = useState<{ name: string; fines: number }[]>([]);
   const [pieChartData, setPieChartData] = useState<{ name: string; value: number }[]>([]);
 
-  useEffect(() => {
-    const { trendData, pieData } = generateChartData(timeRange);
-    setTrendChartData(trendData);
-    setPieChartData(pieData);
-  }, [timeRange]);
-
   const handleDownloadPdf = () => {
-    // NOTE: This is a placeholder for a more complex PDF generation logic.
-    // A full implementation would capture chart images and format data into tables.
     try {
       const doc = new jsPDF();
       doc.text("DRIVA - Traffic Enforcement Report", 20, 20);
@@ -95,6 +87,7 @@ const Dashboard = () => {
           <div className="flex items-center space-x-4">
             <ThemeToggle />
             <Notifications />
+            <Button variant="ghost" size="icon" onClick={() => navigate('/admin/dashboard')}><Shield className="h-5 w-5" /></Button>
             <Button variant="ghost" size="icon" onClick={() => navigate('/settings')}><Settings className="h-5 w-5" /></Button>
             <AlertDialog>
               <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><LogOut className="h-5 w-5" /></Button></AlertDialogTrigger>
