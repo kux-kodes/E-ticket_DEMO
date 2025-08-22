@@ -22,11 +22,17 @@ const SignIn = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Sign in data:', formData);
-    // TODO: Add actual sign-in logic with role-based redirect
-    // For now, redirecting based on email content for demonstration
-    if (formData.email.includes('officer')) {
+    
+    // TODO: Replace this with actual authentication logic
+    // For demonstration, using email patterns to determine user role
+    if (formData.email.includes('@nampol.gov.na') || formData.email.includes('officer')) {
+      // Redirect to police officer dashboard
       navigate('/dashboard');
+    } else if (formData.email.includes('@gov.na') || formData.email.includes('admin')) {
+      // Redirect to admin dashboard (if different from officer)
+      navigate('/admin/dashboard');
     } else {
+      // Default to citizen dashboard
       navigate('/citizen-dashboard');
     }
   };
@@ -60,6 +66,7 @@ const SignIn = () => {
                   required
                 />
               </div>
+              
             </div>
 
             <div className="space-y-2">
