@@ -49,7 +49,7 @@ const SignUp = () => {
     e.preventDefault();
     console.log('Sign up data:', formData);
     // TODO: Add actual sign-up logic
-    navigate('/dashboard');
+    navigate('/citizen-dashboard');
   };
 
   const steps = ["Personal Info", "Payment Method", "Vehicle Details"];
