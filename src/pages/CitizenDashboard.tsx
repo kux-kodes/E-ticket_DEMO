@@ -16,9 +16,15 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { supabase } from '@/integrations/supabase/client';
 
 const CitizenDashboard = () => {
   const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/');
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -43,7 +49,7 @@ const CitizenDashboard = () => {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={() => navigate('/')}>Logout</AlertDialogAction>
+                  <AlertDialogAction onClick={handleLogout}>Logout</AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>

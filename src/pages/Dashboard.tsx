@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { jsPDF } from "jspdf";
 import { showError } from "@/utils/toast";
+import { supabase } from "@/integrations/supabase/client";
 
 // Mock data generation to simulate dynamic data fetching
 const generateChartData = (timeRange: string) => {
@@ -54,6 +55,11 @@ const Dashboard = () => {
   const [timeRange, setTimeRange] = useState('7d');
   const [trendChartData, setTrendChartData] = useState<{ name: string; fines: number }[]>([]);
   const [pieChartData, setPieChartData] = useState<{ name: string; value: number }[]>([]);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    navigate('/');
+  };
 
   const handleDownloadPdf = () => {
     try {
@@ -95,7 +101,7 @@ const Dashboard = () => {
                 <AlertDialogHeader><AlertDialogTitle>Are you sure you want to log out?</AlertDialogTitle></AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={() => navigate('/')}>Logout</AlertDialogAction>
+                  <AlertDialogAction onClick={handleLogout}>Logout</AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
