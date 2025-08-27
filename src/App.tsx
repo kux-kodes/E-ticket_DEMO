@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SplashScreen from "@/components/SplashScreen";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
 import PaidFines from "./pages/PaidFines";
 import NewFines from "./pages/NewFines";
@@ -44,6 +45,7 @@ const AppRoutes = () => {
         {/* Public Routes */}
         <Route path="/" element={<Index />} />
         <Route path="/auth" element={<Auth />} />
+        <Route path="/sign-up" element={<SignUp />} />
         <Route path="/register-department" element={<DepartmentRegistration />} />
         <Route path="/department-registration-success" element={<DepartmentRegistrationSuccess />} />
 

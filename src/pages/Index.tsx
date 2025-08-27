@@ -77,7 +77,7 @@ const Index = () => {
               </Button>
               <Button 
                 className="text-primary-foreground bg-primary"
-                onClick={() => navigate('/auth')}
+                onClick={() => navigate('/sign-up')}
               >
                 Register
               </Button>
