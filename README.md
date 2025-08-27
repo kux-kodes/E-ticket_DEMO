@@ -44,6 +44,65 @@ DRIVA is built with a modern, robust, and scalable technology stack.
   - **File Storage**: Supabase Storage (for dispute evidence)
   - **Serverless Functions**: Supabase Edge Functions (written in Deno/TypeScript) for secure backend logic.
 
+## 🚀 Getting Started
+
+Follow these instructions to get a local copy of the project up and running for development.
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (v18 or later recommended)
+- [npm](https://www.npmjs.com/) (or another package manager like yarn or pnpm)
+- A [Supabase](https://supabase.com/) account (the free tier is sufficient)
+
+### 1. Clone the Repository
+
+First, clone the project to your local machine:
+```bash
+git clone https://github.com/your-username/driva.git
+cd driva
+```
+
+### 2. Install Dependencies
+
+Install the required npm packages:
+```bash
+npm install
+```
+
+### 3. Set Up Supabase
+
+1.  **Create a new Supabase Project**:
+    - Go to your [Supabase Dashboard](https://app.supabase.com/).
+    - Click "New project" and follow the steps to create a new project. Be sure to save your database password securely.
+
+2.  **Get API Keys**:
+    - In your Supabase project, navigate to **Project Settings** > **API**.
+    - Find your **Project URL** and your `anon` **public** key. You will need these for the next step.
+
+3.  **Run Database Migrations**:
+    - The project's database schema is defined in the `supabase/migrations` directory.
+    - Navigate to the **SQL Editor** in your Supabase dashboard.
+    - Open each `.sql` file from the `supabase/migrations` folder, copy its content, and paste it into a new query in the SQL Editor.
+    - Run the queries one by one, in chronological order based on their filenames. This will set up all the required tables, functions, and security policies.
+
+### 4. Configure Environment Variables
+
+1.  In the root of your project, create a new file named `.env`.
+2.  Add the following lines to this file, replacing the placeholder values with the keys you got from your Supabase project:
+
+```env
+VITE_SUPABASE_URL=YOUR_SUPABASE_PROJECT_URL
+VITE_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
+```
+
+### 5. Run the Application
+
+Start the local development server:
+```bash
+npm run dev
+```
+The application should now be running on `http://localhost:8080`.
+
 ## 📂 Project Structure
 
 The codebase is organized to be modular and maintainable.
