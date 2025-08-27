@@ -8,7 +8,9 @@ import { ArrowLeft, Upload, File as FileIcon, X } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Logo from "@/components/Logo";
 import { ThemeToggle } from '@/components/theme-toggle';
-import { showSuccess } from '@/utils/toast';
+import { showSuccess, showError, showLoading, dismissToast } from '@/utils/toast';
+import { supabase } from '@/integrations/supabase/client';
+import { v4 as uuidv4 } from 'uuid';
 
 const DisputeFine = () => {
   const navigate = useNavigate();
@@ -16,6 +18,7 @@ const DisputeFine = () => {
   const [reason, setReason] = useState('');
   const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -49,13 +52,64 @@ const DisputeFine = () => {
     }
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Dispute Submitted:', { fineId, reason, files });
-    showSuccess('Your dispute has been submitted successfully.');
-    setTimeout(() => {
+    if (!fineId || !reason) {
+      showError("Please provide a reason for your dispute.");
+      return;
+    }
+    setIsSubmitting(true);
+    const toastId = showLoading('Submitting your dispute...');
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("You must be logged in to submit a dispute.");
+
+      // 1. Upload files to storage
+      const evidenceUrls: string[] = [];
+      if (files.length > 0) {
+        const uploadPromises = files.map(file => {
+          const filePath = `${user.id}/${fineId}/${uuidv4()}-${file.name}`;
+          return supabase.storage.from('dispute_evidence').upload(filePath, file);
+        });
+
+        const uploadResults = await Promise.all(uploadPromises);
+        
+        for (const result of uploadResults) {
+          if (result.error) throw result.error;
+          const { data: { publicUrl } } = supabase.storage.from('dispute_evidence').getPublicUrl(result.data.path);
+          evidenceUrls.push(publicUrl);
+        }
+      }
+
+      // 2. Insert dispute record into the database
+      const { error: insertError } = await supabase.from('disputes').insert({
+        fine_id: fineId,
+        user_id: user.id,
+        reason: reason,
+        evidence_urls: evidenceUrls,
+        status: 'pending',
+      });
+      if (insertError) throw insertError;
+
+      // 3. Update the fine status to 'disputed'
+      const { error: updateError } = await supabase
+        .from('fines')
+        .update({ status: 'disputed' })
+        .eq('id', fineId);
+      if (updateError) throw updateError;
+
+      dismissToast(toastId);
+      showSuccess('Your dispute has been submitted successfully.');
       navigate('/my-fines');
-    }, 1500);
+
+    } catch (error: any) {
+      dismissToast(toastId);
+      showError(`Submission failed: ${error.message}`);
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -81,7 +135,7 @@ const DisputeFine = () => {
       <main className="max-w-2xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <Card>
           <CardHeader>
-            <CardTitle className="text-xl text-foreground">Dispute Fine #{fineId}</CardTitle>
+            <CardTitle className="text-xl text-foreground">Dispute Fine #{fineId?.substring(0, 8).toUpperCase()}</CardTitle>
             <CardDescription className="text-foreground/70">Please provide a reason and any supporting evidence for your dispute.</CardDescription>
           </CardHeader>
           <CardContent>
@@ -95,6 +149,7 @@ const DisputeFine = () => {
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                   required
+                  disabled={isSubmitting}
                 />
               </div>
               <div className="space-y-2">
@@ -105,7 +160,7 @@ const DisputeFine = () => {
                     onDragOver={onDragOver}
                     onDragLeave={onDragLeave}
                     onDrop={onDrop}
-                    className={`flex flex-col items-center justify-center w-full h-32 border-2 border-border border-dashed rounded-lg cursor-pointer bg-secondary/50 hover:bg-secondary transition-colors ${isDragging ? 'border-primary' : ''}`}
+                    className={`flex flex-col items-center justify-center w-full h-32 border-2 border-border border-dashed rounded-lg cursor-pointer bg-secondary/50 hover:bg-secondary transition-colors ${isDragging ? 'border-primary' : ''} ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                       <Upload className="w-8 h-8 mb-4 text-foreground/60" />
@@ -119,6 +174,7 @@ const DisputeFine = () => {
                       onChange={handleFileChange}
                       multiple
                       accept=".png,.jpg,.jpeg,.pdf"
+                      disabled={isSubmitting}
                     />
                   </label>
                 </div> 
@@ -134,7 +190,7 @@ const DisputeFine = () => {
                           <FileIcon className="h-5 w-5 text-foreground/70 flex-shrink-0" />
                           <span className="text-sm text-foreground truncate" title={file.name}>{file.name}</span>
                         </div>
-                        <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0" onClick={() => removeFile(file.name)}>
+                        <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0" onClick={() => !isSubmitting && removeFile(file.name)} disabled={isSubmitting}>
                           <X className="h-4 w-4" />
                         </Button>
                       </li>
@@ -143,7 +199,9 @@ const DisputeFine = () => {
                 </div>
               )}
 
-              <Button type="submit" className="w-full bg-primary text-primary-foreground">Submit Dispute</Button>
+              <Button type="submit" className="w-full bg-primary text-primary-foreground" disabled={isSubmitting}>
+                {isSubmitting ? 'Submitting...' : 'Submit Dispute'}
+              </Button>
             </form>
           </CardContent>
         </Card>
