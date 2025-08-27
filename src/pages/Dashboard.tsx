@@ -23,38 +23,64 @@ import {
 import { jsPDF } from "jspdf";
 import { showError } from "@/utils/toast";
 import { supabase } from "@/integrations/supabase/client";
-
-// Mock data generation to simulate dynamic data fetching
-const generateChartData = (timeRange: string) => {
-  const pieData = [
-    { name: 'Speeding', value: Math.floor(Math.random() * 100) + 350 },
-    { name: 'Illegal Parking', value: Math.floor(Math.random() * 100) + 250 },
-    { name: 'Red Light', value: Math.floor(Math.random() * 80) + 180 },
-    { name: 'No License', value: Math.floor(Math.random() * 50) + 120 },
-    { name: 'Other', value: Math.floor(Math.random() * 50) + 80 },
-  ];
-
-  let days = 7;
-  if (timeRange === '30d') days = 30;
-  if (timeRange === '90d') days = 90;
-
-  const trendData = Array.from({ length: days }, (_, i) => {
-    const date = new Date();
-    date.setDate(date.getDate() - (days - 1 - i));
-    return {
-      name: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-      fines: Math.floor(Math.random() * 50) + 50,
-    };
-  });
-
-  return { trendData, pieData };
-};
+import { Skeleton } from "@/components/ui/skeleton";
+import { useSession } from "@/contexts/SessionContext";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [timeRange, setTimeRange] = useState('7d');
+  const { profile } = useSession();
+  const [timeRange, setTimeRange] = useState(7);
+  const [stats, setStats] = useState({ finesCollected: 0, newFines: 0, pendingDisputes: 0, outstandingFines: 0 });
   const [trendChartData, setTrendChartData] = useState<{ name: string; fines: number }[]>([]);
   const [pieChartData, setPieChartData] = useState<{ name: string; value: number }[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      setLoading(true);
+      try {
+        const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+
+        const [
+          paidFinesRes,
+          newFinesRes,
+          pendingDisputesRes,
+          outstandingFinesRes,
+          trendRes,
+          pieRes
+        ] = await Promise.all([
+          supabase.from('fines').select('amount').eq('status', 'paid'),
+          supabase.from('fines').select('*', { count: 'exact', head: true }).gte('created_at', sevenDaysAgo),
+          supabase.from('disputes').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
+          supabase.from('fines').select('*', { count: 'exact', head: true }).in('status', ['outstanding', 'overdue']),
+          supabase.rpc('get_fines_trend', { days_limit: timeRange }),
+          supabase.rpc('get_violations_summary')
+        ]);
+
+        if (paidFinesRes.error || newFinesRes.error || pendingDisputesRes.error || outstandingFinesRes.error || trendRes.error || pieRes.error) {
+          throw new Error('Failed to fetch dashboard data.');
+        }
+
+        const totalCollected = paidFinesRes.data?.reduce((sum, fine) => sum + fine.amount, 0) || 0;
+        setStats({
+          finesCollected: totalCollected,
+          newFines: newFinesRes.count || 0,
+          pendingDisputes: pendingDisputesRes.count || 0,
+          outstandingFines: outstandingFinesRes.count || 0,
+        });
+        setTrendChartData(trendRes.data || []);
+        setPieChartData(pieRes.data || []);
+
+      } catch (error) {
+        showError("Could not load dashboard data.");
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, [timeRange]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -65,7 +91,7 @@ const Dashboard = () => {
     try {
       const doc = new jsPDF();
       doc.text("DRIVA - Traffic Enforcement Report", 20, 20);
-      doc.text(`Time Range: ${timeRange}`, 20, 30);
+      doc.text(`Time Range: Last ${timeRange} days`, 20, 30);
       doc.text("This is a placeholder for the full report.", 20, 40);
       doc.save("driva-report.pdf");
     } catch (error) {
@@ -73,13 +99,6 @@ const Dashboard = () => {
       console.error(error);
     }
   };
-
-  const recentActivity = [
-    { title: "New fine issued to N12345W", time: "2 minutes ago", path: "/new-fines" },
-    { title: "Payment received for fine #8432", time: "15 minutes ago", path: "/paid-fines" },
-    { title: "New dispute filed for fine #8219", time: "1 hour ago", path: "/pending-disputes" },
-    { title: "Fine #8430 is now overdue", time: "3 hours ago", path: "/outstanding-fines" }
-  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -93,7 +112,7 @@ const Dashboard = () => {
           <div className="flex items-center space-x-4">
             <ThemeToggle />
             <Notifications />
-            <Button variant="ghost" size="icon" onClick={() => navigate('/admin/dashboard')}><Shield className="h-5 w-5" /></Button>
+            {profile?.role === 'admin' && <Button variant="ghost" size="icon" onClick={() => navigate('/admin/dashboard')}><Shield className="h-5 w-5" /></Button>}
             <Button variant="ghost" size="icon" onClick={() => navigate('/settings')}><Settings className="h-5 w-5" /></Button>
             <AlertDialog>
               <AlertDialogTrigger asChild><Button variant="ghost" size="icon"><LogOut className="h-5 w-5" /></Button></AlertDialogTrigger>
@@ -112,24 +131,23 @@ const Dashboard = () => {
       <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-8">
           <div>
-            <h2 className="text-2xl font-semibold text-foreground mb-2">Welcome back, Officer!</h2>
+            <h2 className="text-2xl font-semibold text-foreground mb-2">Welcome back, {profile?.first_name || 'Officer'}!</h2>
             <p className="text-foreground/70">Here is a summary of traffic enforcement activity.</p>
           </div>
           <div className="flex gap-4">
-            <Select>
-              <SelectTrigger className="w-[180px]"><SelectValue placeholder="Select District" /></SelectTrigger>
-              <SelectContent><SelectItem value="khomas">Khomas</SelectItem></SelectContent>
-            </Select>
             <Button variant="outline" onClick={handleDownloadPdf}><Download className="mr-2 h-4 w-4" /> Download Report</Button>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {/* Stat Cards */}
-          <Card><CardHeader><CardTitle>Fines Collected</CardTitle></CardHeader><CardContent><div className="text-3xl font-bold">N$12,450</div></CardContent><CardFooter><Button className="w-full" onClick={() => navigate('/paid-fines')}>View Fines</Button></CardFooter></Card>
-          <Card><CardHeader><CardTitle>New Fines Issued</CardTitle></CardHeader><CardContent><div className="text-3xl font-bold">+82</div></CardContent><CardFooter><Button className="w-full" onClick={() => navigate('/new-fines')}>View Fines</Button></CardFooter></Card>
-          <Card><CardHeader><CardTitle>Pending Disputes</CardTitle></CardHeader><CardContent><div className="text-3xl font-bold">14</div></CardContent><CardFooter><Button className="w-full" onClick={() => navigate('/pending-disputes')}>View Disputes</Button></CardFooter></Card>
-          <Card><CardHeader><CardTitle>Outstanding Fines</CardTitle></CardHeader><CardContent><div className="text-3xl font-bold">1,253</div></CardContent><CardFooter><Button className="w-full" onClick={() => navigate('/outstanding-fines')}>View Fines</Button></CardFooter></Card>
+          {loading ? Array.from({ length: 4 }).map((_, i) => <Card key={i}><CardHeader><Skeleton className="h-6 w-3/4" /></CardHeader><CardContent><Skeleton className="h-8 w-1/2" /></CardContent><CardFooter><Skeleton className="h-10 w-full" /></CardFooter></Card>) : (
+            <>
+              <Card><CardHeader><CardTitle>Fines Collected (7d)</CardTitle></CardHeader><CardContent><div className="text-3xl font-bold">N${stats.finesCollected.toLocaleString()}</div></CardContent><CardFooter><Button className="w-full" onClick={() => navigate('/paid-fines')}>View Fines</Button></CardFooter></Card>
+              <Card><CardHeader><CardTitle>New Fines Issued (7d)</CardTitle></CardHeader><CardContent><div className="text-3xl font-bold">+{stats.newFines}</div></CardContent><CardFooter><Button className="w-full" onClick={() => navigate('/new-fines')}>View Fines</Button></CardFooter></Card>
+              <Card><CardHeader><CardTitle>Pending Disputes</CardTitle></CardHeader><CardContent><div className="text-3xl font-bold">{stats.pendingDisputes}</div></CardContent><CardFooter><Button className="w-full" onClick={() => navigate('/pending-disputes')}>View Disputes</Button></CardFooter></Card>
+              <Card><CardHeader><CardTitle>Outstanding Fines</CardTitle></CardHeader><CardContent><div className="text-3xl font-bold">{stats.outstandingFines}</div></CardContent><CardFooter><Button className="w-full" onClick={() => navigate('/outstanding-fines')}>View Fines</Button></CardFooter></Card>
+            </>
+          )}
         </div>
         
         <div className="space-y-8">
@@ -139,41 +157,33 @@ const Dashboard = () => {
                 <CardTitle className="text-xl text-foreground">Analytics Overview</CardTitle>
                 <CardDescription className="text-foreground/70">View trends and breakdowns of traffic fines.</CardDescription>
               </div>
-              <Select value={timeRange} onValueChange={setTimeRange}>
+              <Select value={String(timeRange)} onValueChange={(val) => setTimeRange(Number(val))}>
                 <SelectTrigger className="w-full sm:w-[180px]"><SelectValue placeholder="Select time range" /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="7d">Last 7 Days</SelectItem>
-                  <SelectItem value="30d">Last 30 Days</SelectItem>
-                  <SelectItem value="90d">Last 90 Days</SelectItem>
+                  <SelectItem value="7">Last 7 Days</SelectItem>
+                  <SelectItem value="30">Last 30 Days</SelectItem>
+                  <SelectItem value="90">Last 90 Days</SelectItem>
                 </SelectContent>
               </Select>
             </CardHeader>
             <CardContent className="grid grid-cols-1 lg:grid-cols-5 gap-8 pt-6">
-              <div className="lg:col-span-3">
-                <h3 className="font-semibold text-lg mb-4 text-foreground">Fines Trend</h3>
-                <FinesTrendChart data={trendChartData} />
-              </div>
-              <div className="lg:col-span-2">
-                <h3 className="font-semibold text-lg mb-4 text-foreground">Top Violations</h3>
-                <ViolationsPieChart data={pieChartData} />
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader><CardTitle className="text-xl text-foreground">Recent Activity</CardTitle></CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {recentActivity.map((item, index) => (
-                  <div key={index} className="flex items-start space-x-3 p-3 rounded-lg hover:shadow-neumorphic-inset cursor-pointer" onClick={() => navigate(item.path)}>
-                    <div className="shadow-neumorphic-inset p-2 rounded-full mt-0.5"><div className="bg-primary w-2 h-2 rounded-full"></div></div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-foreground">{item.title}</p>
-                      <p className="text-xs text-foreground/60">{item.time}</p>
-                    </div>
+              {loading ? (
+                <>
+                  <div className="lg:col-span-3"><Skeleton className="h-80 w-full" /></div>
+                  <div className="lg:col-span-2"><Skeleton className="h-80 w-full" /></div>
+                </>
+              ) : (
+                <>
+                  <div className="lg:col-span-3">
+                    <h3 className="font-semibold text-lg mb-4 text-foreground">Fines Trend</h3>
+                    <FinesTrendChart data={trendChartData} />
                   </div>
-                ))}
-              </div>
+                  <div className="lg:col-span-2">
+                    <h3 className="font-semibold text-lg mb-4 text-foreground">Top Violations</h3>
+                    <ViolationsPieChart data={pieChartData} />
+                  </div>
+                </>
+              )}
             </CardContent>
           </Card>
         </div>
