@@ -40,7 +40,7 @@ const Auth = () => {
             <Logo size="large" />
           </div>
           <CardTitle className="text-3xl text-foreground mb-2">Welcome Back to DRIVA</CardTitle>
-          <CardDescription className="text-foreground/80 text-lg">
+          <CardDescription className="text-foreground/80">
             Sign in to your account to continue
           </CardDescription>
         </CardHeader>
