@@ -21,7 +21,7 @@ const SplashScreen = () => {
             repeatType: "reverse"
           }}
         >
-          <Logo size="xl" className="mx-auto mb-8" />
+          <Logo size="7xl" className="mx-auto mb-8" />
         </motion.div>
         <motion.h1 
           className="text-5xl font-bold text-foreground mb-3 tracking-wide"
