@@ -1,39 +1,94 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, AlertCircle } from 'lucide-react';
 import Logo from "@/components/Logo";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  // Clear any existing session data when signin page loads
+  useEffect(() => {
+    // Clear session storage
+    sessionStorage.removeItem('supabase.auth.token');
+    sessionStorage.removeItem('supabase.user.data');
+    sessionStorage.removeItem('supabase.profile.data');
+    
+    // Check if we were redirected here due to authentication issue
+    if (location.state?.from) {
+      setError('Please sign in to access that page');
+    }
+  }, [location]);
 
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    if (error) setError('');
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Sign in data:', formData);
-    
-    // TODO: Replace this with actual authentication logic
-    // For demonstration, using email patterns to determine user role
-    if (formData.email.includes('@nampol.gov.na') || formData.email.includes('officer')) {
-      // Redirect to police officer dashboard
-      navigate('/dashboard');
-    } else if (formData.email.includes('@gov.na') || formData.email.includes('admin')) {
-      // Redirect to admin dashboard (if different from officer)
-      navigate('/admin/dashboard');
-    } else {
-      // Default to citizen dashboard
-      navigate('/citizen-dashboard');
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (signInError) {
+        throw new Error(signInError.message);
+      }
+
+      if (data.session) {
+        // Store session in sessionStorage
+        sessionStorage.setItem('supabase.auth.token', JSON.stringify(data.session));
+        sessionStorage.setItem('lastActivity', Date.now().toString());
+        
+        // Get user profile
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', data.session.user.id)
+          .single();
+        
+        if (profileData) {
+          sessionStorage.setItem('supabase.profile.data', JSON.stringify(profileData));
+          
+          // Redirect based on role
+          switch (profileData.role) {
+            case 'admin':
+              navigate('/admin/dashboard');
+              break;
+            case 'officer':
+            case 'department_admin':
+              navigate('/dashboard');
+              break;
+            case 'citizen':
+              navigate('/citizen-dashboard');
+              break;
+            default:
+              navigate('/');
+          }
+        }
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred during sign in');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -52,6 +107,13 @@ const SignIn = () => {
 
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-6 px-6">
+            {error && (
+              <div className="bg-destructive/15 text-destructive p-3 rounded-md flex items-center gap-2">
+                <AlertCircle className="h-5 w-5" />
+                <span className="text-sm">{error}</span>
+              </div>
+            )}
+            
             <div className="space-y-2">
               <Label htmlFor="email" className="text-foreground font-medium">Email Address</Label>
               <div className="relative">
@@ -64,9 +126,9 @@ const SignIn = () => {
                   onChange={(e) => handleChange('email', e.target.value)}
                   className="pl-10 h-12 text-base"
                   required
+                  disabled={isLoading}
                 />
               </div>
-              
             </div>
 
             <div className="space-y-2">
@@ -81,54 +143,33 @@ const SignIn = () => {
                   onChange={(e) => handleChange('password', e.target.value)}
                   className="pl-10 h-12 text-base pr-12"
                   required
+                  disabled={isLoading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground/60 hover:text-foreground transition-colors"
+                  disabled={isLoading}
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                 </button>
               </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 text-primary focus:ring-primary border-border rounded"
-                />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-foreground/70">
-                  Remember me
-                </label>
-              </div>
-              <a href="#" className="text-sm text-primary hover:text-primary/80 font-medium transition-colors">
-                Forgot password?
-              </a>
             </div>
           </CardContent>
           <CardFooter className="flex flex-col px-6 pb-6">
             <Button 
               type="submit" 
               className="w-full h-12 bg-primary text-primary-foreground text-lg font-medium"
+              disabled={isLoading}
             >
-              Sign In
+              {isLoading ? 'Signing in...' : 'Sign In'}
             </Button>
-            <div className="mt-6 text-center">
-              <p className="text-sm text-foreground/70">
-                Don't have an account?{' '}
-                <a href="/sign-up" className="text-primary hover:text-primary/80 font-medium transition-colors">
-                  Sign up here
-                </a>
-              </p>
-            </div>
           </CardFooter>
         </form>
       </Card>
     </div>
   );
 };
+
 
 export default SignIn;
