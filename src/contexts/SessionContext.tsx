@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Session, User } from '@supabase/supabase-js';
@@ -13,6 +14,7 @@ type SessionContextType = {
   user: User | null;
   profile: Profile | null;
   loading: boolean;
+  logout: () => Promise<void>;
 };
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined);
@@ -22,6 +24,22 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Function to clear all session data
+  const clearSessionData = () => {
+    sessionStorage.removeItem('supabase.auth.token');
+    sessionStorage.removeItem('supabase.user.data');
+    sessionStorage.removeItem('supabase.profile.data');
+    setSession(null);
+    setUser(null);
+    setProfile(null);
+  };
+
+  // Logout function
+  const logout = async () => {
+    await supabase.auth.signOut();
+    clearSessionData();
+  };
 
   useEffect(() => {
     const getSessionAndProfile = async () => {
@@ -37,6 +55,12 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
           .eq('id', session.user.id)
           .single();
         setProfile(profileData);
+        
+        // Store in sessionStorage (cleared when browser closes)
+        sessionStorage.setItem('supabase.auth.token', JSON.stringify(session));
+        if (profileData) {
+          sessionStorage.setItem('supabase.profile.data', JSON.stringify(profileData));
+        }
       }
       setLoading(false);
     };
@@ -46,9 +70,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
-      setProfile(null);
-      setLoading(true);
-
+      
       if (session?.user) {
         const { data: profileData } = await supabase
           .from('profiles')
@@ -56,6 +78,15 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
           .eq('id', session.user.id)
           .single();
         setProfile(profileData);
+        
+        // Store in sessionStorage
+        sessionStorage.setItem('supabase.auth.token', JSON.stringify(session));
+        if (profileData) {
+          sessionStorage.setItem('supabase.profile.data', JSON.stringify(profileData));
+        }
+      } else {
+        // Clear session data if user logs out
+        clearSessionData();
       }
       setLoading(false);
     });
@@ -70,6 +101,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     user,
     profile,
     loading,
+    logout,
   };
 
   return (
