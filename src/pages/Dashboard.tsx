@@ -32,7 +32,7 @@ const Dashboard = () => {
   const [timeRange, setTimeRange] = useState(7);
   const [stats, setStats] = useState({ finesCollected: 0, newFines: 0, pendingDisputes: 0, outstandingFines: 0 });
   const [trendChartData, setTrendChartData] = useState<{ name: string; fines: number }[]>([]);
-  const [pieChartData, setPieChartData] = useState<{ name: string; value: number }[]>([]);
+  //const [pieChartData, setPieChartData] = useState<{ name: string; value: number }[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -47,17 +47,17 @@ const Dashboard = () => {
           pendingDisputesRes,
           outstandingFinesRes,
           trendRes,
-          pieRes
+          //pieRes
         ] = await Promise.all([
           supabase.from('fines').select('amount').eq('status', 'paid'),
-          supabase.from('fines').select('*', { count: 'exact', head: true }).gte('created_at', sevenDaysAgo),
+          supabase.from('fines').select('*', { count: 'exact', head: true }).gte('fine_date', sevenDaysAgo),
           supabase.from('disputes').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
           supabase.from('fines').select('*', { count: 'exact', head: true }).in('status', ['outstanding', 'overdue']),
           supabase.rpc('get_fines_trend', { days_limit: timeRange }),
-          supabase.rpc('get_violations_summary')
+          //supabase.rpc('get_violations_summary')
         ]);
 
-        if (paidFinesRes.error || newFinesRes.error || pendingDisputesRes.error || outstandingFinesRes.error || trendRes.error || pieRes.error) {
+        if (paidFinesRes.error || newFinesRes.error || pendingDisputesRes.error || outstandingFinesRes.error || trendRes.error /*|| pieRes.error*/) {
           throw new Error('Failed to fetch dashboard data.');
         }
 
@@ -69,7 +69,7 @@ const Dashboard = () => {
           outstandingFines: outstandingFinesRes.count || 0,
         });
         setTrendChartData(trendRes.data || []);
-        setPieChartData(pieRes.data || []);
+        //setPieChartData(pieRes.data || []);
 
       } catch (error) {
         showError("Could not load dashboard data.");
@@ -180,7 +180,7 @@ const Dashboard = () => {
                   </div>
                   <div className="lg:col-span-2">
                     <h3 className="font-semibold text-lg mb-4 text-foreground">Top Violations</h3>
-                    <ViolationsPieChart data={pieChartData} />
+                    {/* <ViolationsPieChart data={pieChartData}/> */}
                   </div>
                 </>
               )}

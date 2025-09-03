@@ -40,7 +40,7 @@ type Fine = {
   amount: number;
   fine_date: string;
   due_date: string;
-  status: 'settled' | 'disputed' | 'outstanding';
+  status: 'paid' | 'disputed' | 'overdue';
   profiles: {
     first_name: string;
     last_name: string;
@@ -51,7 +51,7 @@ type Fine = {
 const FinesDashboard = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'settled' | 'disputed' | 'outstanding'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'paid' | 'disputed' | 'overdue'>('all');
   const [fines, setFines] = useState<Fine[]>([]);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState<string | null>(null);
@@ -127,9 +127,9 @@ const FinesDashboard = () => {
   // Calculate statistics
   const totalFines = fines.length;
   const totalAmount = fines.reduce((sum, fine) => sum + fine.amount, 0);
-  const settledFines = fines.filter(fine => fine.status === 'settled');
+  const settledFines = fines.filter(fine => fine.status === 'paid');
   const disputedFines = fines.filter(fine => fine.status === 'disputed');
-  const outstandingFines = fines.filter(fine => fine.status === 'outstanding');
+  const outstandingFines = fines.filter(fine => fine.status === 'overdue');
 
   const settledAmount = settledFines.reduce((sum, fine) => sum + fine.amount, 0);
   const disputedAmount = disputedFines.reduce((sum, fine) => sum + fine.amount, 0);
@@ -341,7 +341,7 @@ const FinesDashboard = () => {
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem 
-                              onClick={() => updateFineStatus(fine.id, 'settled')}
+                              onClick={() => updateFineStatus(fine.id, 'paid')}
                               disabled={updating === fine.id}
                             >
                               Mark as Settled
@@ -353,7 +353,7 @@ const FinesDashboard = () => {
                               Mark as Disputed
                             </DropdownMenuItem>
                             <DropdownMenuItem 
-                              onClick={() => updateFineStatus(fine.id, 'outstanding')}
+                              onClick={() => updateFineStatus(fine.id, 'overdue')}
                               disabled={updating === fine.id}
                             >
                               Mark as Outstanding
