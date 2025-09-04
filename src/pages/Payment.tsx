@@ -89,9 +89,9 @@ const Payment = () => {
       dismissToast(toastId);
       showSuccess('Payment successful!');
       navigate('/payment-success');
-    } catch (error: any) {
+    } catch (error: unknown) {
       dismissToast(toastId);
-      showError(`Payment failed: ${error.message}`);
+      showError(`Payment failed: ${error}`);
     }
   };
 

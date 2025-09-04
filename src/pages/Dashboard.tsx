@@ -26,6 +26,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSession } from "@/contexts/SessionContext";
 
+type Profile = {
+  id: string;
+  role: string;
+  first_name?: string; 
+  last_name?: string;
+  [key: string]: string | undefined; // Allow other fields
+};
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const { profile } = useSession();
@@ -131,7 +139,7 @@ const Dashboard = () => {
       <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-8">
           <div>
-            <h2 className="text-2xl font-semibold text-foreground mb-2">Welcome back, {profile?.first_name || 'Officer'}!</h2>
+            <h2 className="text-2xl font-semibold text-foreground mb-2">Welcome back, {`${profile?.first_name} ${profile?.last_name}`.trim() || 'Officer'}!</h2>
             <p className="text-foreground/70">Here is a summary of traffic enforcement activity.</p>
           </div>
           <div className="flex gap-4">

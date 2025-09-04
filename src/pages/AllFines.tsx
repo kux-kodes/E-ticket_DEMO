@@ -144,7 +144,7 @@ const FinesDashboard = () => {
     
     const config = statusConfig[status];
     return (
-      <Badge variant={config.variant as any} className={config.className}>
+      <Badge variant={config.variant as never} className={config.className}>
         {config.label}
       </Badge>
     );
@@ -265,7 +265,7 @@ const FinesDashboard = () => {
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
-                <Select value={statusFilter} onValueChange={(value: any) => setStatusFilter(value)}>
+                <Select value={statusFilter} onValueChange={(value: never) => setStatusFilter(value)}>
                   <SelectTrigger className="w-full sm:w-32">
                     <SelectValue placeholder="Filter status" />
                   </SelectTrigger>

@@ -21,6 +21,14 @@ import { useSession } from '@/contexts/SessionContext';
 import { Skeleton } from '@/components/ui/skeleton';
 import { showError } from '@/utils/toast';
 
+type Profile = {
+  id: string;
+  role: string;
+  first_name?: string; 
+  last_name?: string;
+  [key: string]: string | undefined; // Allow other fields
+};
+
 const CitizenDashboard = () => {
   const navigate = useNavigate();
   const { user, profile } = useSession();
@@ -102,7 +110,7 @@ const CitizenDashboard = () => {
       </header>
       <main className="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h2 className="text-2xl font-semibold text-foreground mb-2">Welcome, {profile?.first_name || 'Citizen'}!</h2>
+          <h2 className="text-2xl font-semibold text-foreground mb-2">Welcome, {`${profile?.first_name} ${profile?.last_name}`.trim() || 'Citizen'}!</h2>
           <p className="text-foreground/70">Here's a summary of your traffic fines.</p>
         </div>
 

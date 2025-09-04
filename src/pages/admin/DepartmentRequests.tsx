@@ -64,9 +64,9 @@ const DepartmentRequests = () => {
       dismissToast(toastId);
       showSuccess(`Department has been ${decision}.`);
       fetchRequests(); // Refresh the list
-    } catch (error: any) {
+    } catch (error: unknown) {
       dismissToast(toastId);
-      showError(`Failed to process request: ${error.message}`);
+      showError(`Failed to process request: ${error}`);
     }
   };
 

@@ -6,7 +6,7 @@ import { Session, User } from '@supabase/supabase-js';
 type Profile = {
   id: string;
   role: string;
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 type SessionContextType = {

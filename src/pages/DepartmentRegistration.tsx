@@ -51,9 +51,9 @@ const DepartmentRegistration = () => {
       dismissToast(toastId);
       showSuccess('Registration submitted!');
       navigate('/department-registration-success');
-    } catch (error: any) {
+    } catch (error: unknown) {
       dismissToast(toastId);
-      showError(`Registration failed: ${error.message}`);
+      showError(`Registration failed: ${error}`);
     }
   };
 

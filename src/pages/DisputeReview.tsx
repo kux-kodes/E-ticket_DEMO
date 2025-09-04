@@ -109,9 +109,9 @@ const DisputeReview = () => {
       dismissToast(toastId);
       showSuccess(`Dispute has been successfully ${decision.toLowerCase()}.`);
       navigate('/pending-disputes');
-    } catch (error: any) {
+    } catch (error: unknown) {
       dismissToast(toastId);
-      showError(`Failed to process decision: ${error.message}`);
+      showError(`Failed to process decision: ${error}`);
     }
   };
 

@@ -103,9 +103,9 @@ const DisputeFine = () => {
       showSuccess('Your dispute has been submitted successfully.');
       navigate('/my-fines');
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       dismissToast(toastId);
-      showError(`Submission failed: ${error.message}`);
+      showError(`Submission failed: ${error}`);
       console.error(error);
     } finally {
       setIsSubmitting(false);
