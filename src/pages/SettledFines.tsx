@@ -22,12 +22,37 @@ type PaidFine = {
   id: string;
   violation_type: string;
   amount: number;
-  fine_date: string; // Assuming we want to show when it was issued
+  fine_date: string;
   profiles: {
     first_name: string;
     last_name: string;
   }[] | null;
 };
+
+// Static data for settled tickets
+const staticSettledTickets: PaidFine[] = [
+  {
+    id: 'st-001-2023',
+    violation_type: 'Speeding',
+    amount: 1000,
+    fine_date: '2023-05-15',
+    profiles: [{ first_name: 'John', last_name: 'Doe' }]
+  },
+  {
+    id: 'st-002-2023',
+    violation_type: 'Parking Violation',
+    amount: 500,
+    fine_date: '2023-06-22',
+    profiles: [{ first_name: 'Jane', last_name: 'Smith' }]
+  },
+  {
+    id: 'st-003-2023',
+    violation_type: 'Red Light Violation',
+    amount: 1500,
+    fine_date: '2023-07-30',
+    profiles: [{ first_name: 'Robert', last_name: 'Johnson' }]
+  }
+];
 
 const PaidFines = () => {
   const navigate = useNavigate();
@@ -54,9 +79,12 @@ const PaidFines = () => {
 
       if (error) {
         console.error('Error fetching paid fines:', error);
-        showError('Failed to fetch paid fines.');
+        showError('Failed to fetch paid fines. Showing sample data.');
+        // Use static data if there's an error fetching from the database
+        setFines(staticSettledTickets);
       } else {
-        setFines(data as PaidFine[]);
+        // If we have data from the database, use it, otherwise use static data
+        setFines(data && data.length > 0 ? data as PaidFine[] : staticSettledTickets);
       }
       setLoading(false);
     };

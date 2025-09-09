@@ -30,6 +30,20 @@ type Dispute = {
   }[] | null;
 };
 
+// Static data for a pending dispute
+const staticPendingDispute: Dispute[] = [
+  {
+    fine_id: 'disp-001-2023',
+    submitted_at: '2023-10-15T14:30:00Z',
+    fines: [
+      {
+        violation_type: 'Speeding in School Zone',
+        profiles: [{ first_name: 'Sarah', last_name: 'Wilson' }]
+      }
+    ]
+  }
+];
+
 const PendingDisputes = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
@@ -56,9 +70,15 @@ const PendingDisputes = () => {
 
       if (error) {
         console.error('Error fetching disputes:', error);
-        showError('Failed to fetch pending disputes.');
+        showError('Failed to fetch pending disputes. Showing sample data.');
+        // Use static data if there's an error fetching from the database
+        setDisputes(staticPendingDispute);
       } else if (data) {
-        setDisputes(data as Dispute[]);
+        // If we have data from the database, use it, otherwise use static data
+        setDisputes(data.length > 0 ? data as Dispute[] : staticPendingDispute);
+      } else {
+        // If no data returned, use static data
+        setDisputes(staticPendingDispute);
       }
       setLoading(false);
     };

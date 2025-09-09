@@ -31,6 +31,18 @@ type OutstandingFine = {
   }[] | null;
 };
 
+// Static data for an outstanding ticket
+const staticOutstandingTicket: OutstandingFine[] = [
+  {
+    id: 'of-001-2023',
+    violation_type: 'Illegal Parking',
+    amount: 750,
+    due_date: '2023-11-30',
+    status: 'outstanding',
+    profiles: [{ first_name: 'Michael', last_name: 'Brown' }]
+  }
+];
+
 const OutstandingFines = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
@@ -57,9 +69,12 @@ const OutstandingFines = () => {
 
       if (error) {
         console.error('Error fetching outstanding fines:', error);
-        showError('Failed to fetch outstanding fines.');
+        showError('Failed to fetch outstanding fines. Showing sample data.');
+        // Use static data if there's an error fetching from the database
+        setFines(staticOutstandingTicket);
       } else {
-        setFines(data as OutstandingFine[]);
+        // If we have data from the database, use it, otherwise use static data
+        setFines(data && data.length > 0 ? data as OutstandingFine[] : staticOutstandingTicket);
       }
       setLoading(false);
     };
@@ -132,7 +147,7 @@ const OutstandingFines = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="font-bold text-foreground">Rerefence Number </TableHead>
+                  <TableHead className="font-bold text-foreground">Reference Number</TableHead>
                   <TableHead className="font-bold text-foreground">Driver</TableHead>
                   <TableHead className="font-bold text-foreground">Violation Type</TableHead>
                   <TableHead className="font-bold text-foreground text-right">Amount (N$)</TableHead>

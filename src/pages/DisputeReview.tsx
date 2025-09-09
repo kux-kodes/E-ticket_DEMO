@@ -34,6 +34,38 @@ type DisputeDetails = {
   }[] | null;
 };
 
+// Static data for a pending dispute
+const staticDispute: DisputeDetails = {
+  reason: "I was not speeding in a school zone. The school was closed for holidays and there were no children present. I believe the speed camera may have been miscalibrated or another vehicle was mistaken for mine.",
+  evidence_urls: [
+    "https://example.com/evidence1.jpg",
+    "https://example.com/evidence2.pdf"
+  ],
+  fines: [
+    {
+      id: 'disp-001-2023',
+      fine_date: '2023-09-10',
+      violation_type: 'Speeding in School Zone',
+      amount: 1200,
+      location: 'Mandume Ndemufayo Ave, Windhoek',
+      license_plate: 'NAM123A',
+      profiles: [
+        {
+          first_name: 'Sarah',
+          last_name: 'Wilson'
+        }
+      ],
+      officer: [
+        {
+          first_name: 'John',
+          last_name: 'Officer',
+          badge_number: 'NMP1234'
+        }
+      ]
+    }
+  ]
+};
+
 const DisputeReview = () => {
   const navigate = useNavigate();
   const { fineId } = useParams();
@@ -74,8 +106,9 @@ const DisputeReview = () => {
 
       if (error || !data) {
         console.error('Error fetching dispute details:', error);
-        showError('Failed to load dispute details or it has been resolved.');
-        setDispute(null);
+        showError('Failed to load dispute details. Showing sample data.');
+        // Use static data if there's an error fetching from the database
+        setDispute(staticDispute);
       } else {
         setDispute(data as unknown as DisputeDetails);
       }

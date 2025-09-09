@@ -48,6 +48,58 @@ type Fine = {
   }[] | null;
 };
 
+// Static data for all tickets
+const staticFines: Fine[] = [
+  // 3 settled tickets
+  {
+    id: 'st-001-2023',
+    violation_type: 'Speeding',
+    amount: 1000,
+    fine_date: '2023-05-15',
+    due_date: '2023-06-15',
+    status: 'paid',
+    profiles: [{ first_name: 'John', last_name: 'Doe', email: 'john.doe@example.com' }]
+  },
+  {
+    id: 'st-002-2023',
+    violation_type: 'Parking Violation',
+    amount: 500,
+    fine_date: '2023-06-22',
+    due_date: '2023-07-22',
+    status: 'paid',
+    profiles: [{ first_name: 'Jane', last_name: 'Smith', email: 'jane.smith@example.com' }]
+  },
+  {
+    id: 'st-003-2023',
+    violation_type: 'Red Light Violation',
+    amount: 1500,
+    fine_date: '2023-07-30',
+    due_date: '2023-08-30',
+    status: 'paid',
+    profiles: [{ first_name: 'Robert', last_name: 'Johnson', email: 'robert.johnson@example.com' }]
+  },
+  // 1 outstanding ticket
+  {
+    id: 'of-001-2023',
+    violation_type: 'Illegal Parking',
+    amount: 750,
+    fine_date: '2023-10-15',
+    due_date: '2023-11-30',
+    status: 'overdue',
+    profiles: [{ first_name: 'Michael', last_name: 'Brown', email: 'michael.brown@example.com' }]
+  },
+  // 1 pending dispute ticket
+  {
+    id: 'disp-001-2023',
+    violation_type: 'Speeding in School Zone',
+    amount: 1200,
+    fine_date: '2023-09-10',
+    due_date: '2023-10-10',
+    status: 'disputed',
+    profiles: [{ first_name: 'Sarah', last_name: 'Wilson', email: 'sarah.wilson@example.com' }]
+  }
+];
+
 const FinesDashboard = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
@@ -81,9 +133,12 @@ const FinesDashboard = () => {
 
     if (error) {
       console.error('Error fetching fines:', error);
-      showError('Failed to fetch fines.');
+      showError('Failed to fetch fines. Showing sample data.');
+      // Use static data if there's an error fetching from the database
+      setFines(staticFines);
     } else {
-      setFines(data as Fine[]);
+      // If we have data from the database, use it, otherwise use static data
+      setFines(data && data.length > 0 ? data as Fine[] : staticFines);
     }
     setLoading(false);
   };
@@ -137,9 +192,9 @@ const FinesDashboard = () => {
 
   const getStatusBadge = (status: Fine['status']) => {
     const statusConfig = {
-      settled: { label: 'Settled', variant: 'default', className: 'bg-green-500' },
+      paid: { label: 'Settled', variant: 'default', className: 'bg-green-500' },
       disputed: { label: 'Disputed', variant: 'outline', className: 'border-orange-500 text-orange-500' },
-      outstanding: { label: 'Outstanding', variant: 'destructive', className: 'bg-red-500' },
+      overdue: { label: 'Outstanding', variant: 'destructive', className: 'bg-red-500' },
     };
     
     const config = statusConfig[status];
@@ -265,15 +320,15 @@ const FinesDashboard = () => {
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
-                <Select value={statusFilter} onValueChange={(value: never) => setStatusFilter(value)}>
+                <Select value={statusFilter} onValueChange={(value: 'all' | 'paid' | 'disputed' | 'overdue') => setStatusFilter(value)}>
                   <SelectTrigger className="w-full sm:w-32">
                     <SelectValue placeholder="Filter status" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All</SelectItem>
-                    <SelectItem value="settled">Settled</SelectItem>
+                    <SelectItem value="paid">Settled</SelectItem>
                     <SelectItem value="disputed">Disputed</SelectItem>
-                    <SelectItem value="outstanding">Outstanding</SelectItem>
+                    <SelectItem value="overdue">Outstanding</SelectItem>
                   </SelectContent>
                 </Select>
                 <Button variant="outline" size="icon" onClick={exportToCSV}>

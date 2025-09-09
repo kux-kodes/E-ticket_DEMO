@@ -31,16 +31,43 @@ type Profile = {
   role: string;
   first_name?: string; 
   last_name?: string;
-  [key: string]: string | undefined; // Allow other fields
+  [key: string]: string | undefined;
 };
+
+// Static data for dashboard statistics
+const staticStats = {
+  finesCollected: 3000, // Sum of 3 settled tickets: 1000 + 500 + 1500
+  settledFines: 3, // Total of all tickets
+  pendingDisputes: 1, // 1 pending dispute
+  outstandingFines: 1, // 1 outstanding fine
+};
+
+// Static trend data for the chart
+const staticTrendData = [
+  { name: 'Day 1', fines: 2 },
+  { name: 'Day 2', fines: 1 },
+  { name: 'Day 3', fines: 0 },
+  { name: 'Day 4', fines: 1 },
+  { name: 'Day 5', fines: 0 },
+  { name: 'Day 6', fines: 1 },
+  { name: 'Day 7', fines: 0 },
+];
+
+// Static violation data for the pie chart
+const staticViolationData = [
+  { name: 'Speeding', value: 2 },
+  { name: 'Parking Violation', value: 1 },
+  { name: 'Red Light Violation', value: 1 },
+  { name: 'Illegal Parking', value: 1 },
+];
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { profile } = useSession();
   const [timeRange, setTimeRange] = useState(7);
-  const [stats, setStats] = useState({ finesCollected: 0, newFines: 0, pendingDisputes: 0, outstandingFines: 0 });
+  const [stats, setStats] = useState({ finesCollected: 0, settledFines: 0, pendingDisputes: 0, outstandingFines: 0 });
   const [trendChartData, setTrendChartData] = useState<{ name: string; fines: number }[]>([]);
-  //const [pieChartData, setPieChartData] = useState<{ name: string; value: number }[]>([]);
+  const [pieChartData, setPieChartData] = useState<{ name: string; value: number }[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -51,37 +78,44 @@ const Dashboard = () => {
 
         const [
           paidFinesRes,
-          newFinesRes,
+          settledFinesRes,
           pendingDisputesRes,
           outstandingFinesRes,
           trendRes,
-          //pieRes
+          pieRes
         ] = await Promise.all([
           supabase.from('fines').select('amount').eq('status', 'paid'),
           supabase.from('fines').select('*', { count: 'exact', head: true }).gte('fine_date', sevenDaysAgo),
           supabase.from('disputes').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
           supabase.from('fines').select('*', { count: 'exact', head: true }).in('status', ['outstanding', 'overdue']),
           supabase.rpc('get_fines_trend', { days_limit: timeRange }),
-          //supabase.rpc('get_violations_summary')
+          supabase.rpc('get_violations_summary')
         ]);
 
-        if (paidFinesRes.error || newFinesRes.error || pendingDisputesRes.error || outstandingFinesRes.error || trendRes.error /*|| pieRes.error*/) {
-          throw new Error('Failed to fetch dashboard data.');
+        if (paidFinesRes.error || settledFinesRes.error || pendingDisputesRes.error || outstandingFinesRes.error || trendRes.error || pieRes.error) {
+          throw new Error('Failed to fetch dashboard data. Showing sample data.');
         }
 
         const totalCollected = paidFinesRes.data?.reduce((sum, fine) => sum + fine.amount, 0) || 0;
+        
+        // Use database data if available, otherwise use static data
         setStats({
-          finesCollected: totalCollected,
-          newFines: newFinesRes.count || 0,
-          pendingDisputes: pendingDisputesRes.count || 0,
-          outstandingFines: outstandingFinesRes.count || 0,
+          finesCollected: totalCollected > 0 ? totalCollected : staticStats.finesCollected,
+          settledFines: settledFinesRes.count || staticStats.settledFines,
+          pendingDisputes: pendingDisputesRes.count || staticStats.pendingDisputes,
+          outstandingFines: outstandingFinesRes.count || staticStats.outstandingFines,
         });
-        setTrendChartData(trendRes.data || []);
-        //setPieChartData(pieRes.data || []);
+        
+        setTrendChartData(trendRes.data?.length > 0 ? trendRes.data : staticTrendData);
+        setPieChartData(pieRes.data?.length > 0 ? pieRes.data : staticViolationData);
 
       } catch (error) {
-        showError("Could not load dashboard data.");
+        showError("Could not load dashboard data. Showing sample data.");
         console.error(error);
+        // Use static data when there's an error
+        setStats(staticStats);
+        setTrendChartData(staticTrendData);
+        setPieChartData(staticViolationData);
       } finally {
         setLoading(false);
       }
@@ -100,7 +134,11 @@ const Dashboard = () => {
       const doc = new jsPDF();
       doc.text("DRIVA - Traffic Enforcement Report", 20, 20);
       doc.text(`Time Range: Last ${timeRange} days`, 20, 30);
-      doc.text("This is a placeholder for the full report.", 20, 40);
+      doc.text(`Total Fines Collected: N$${stats.finesCollected.toLocaleString()}`, 20, 40);
+      doc.text(`New Fines: ${stats.settledFines}`, 20, 50);
+      doc.text(`Pending Disputes: ${stats.pendingDisputes}`, 20, 60);
+      doc.text(`Outstanding Fines: ${stats.outstandingFines}`, 20, 70);
+      doc.text("This report includes sample data for demonstration.", 20, 80);
       doc.save("driva-report.pdf");
     } catch (error) {
       showError("Failed to generate PDF report.");
@@ -151,7 +189,7 @@ const Dashboard = () => {
           {loading ? Array.from({ length: 4 }).map((_, i) => <Card key={i}><CardHeader><Skeleton className="h-6 w-3/4" /></CardHeader><CardContent><Skeleton className="h-8 w-1/2" /></CardContent><CardFooter><Skeleton className="h-10 w-full" /></CardFooter></Card>) : (
             <>
               <Card><CardHeader><CardTitle>Total Fines (7d)</CardTitle></CardHeader><CardContent><div className="text-3xl font-bold">N${stats.finesCollected.toLocaleString()}</div></CardContent><CardFooter><Button className="w-full" onClick={() => navigate('/paid-fines')}>View Fines</Button></CardFooter></Card>
-              <Card><CardHeader><CardTitle>Settled Fines (7d)</CardTitle></CardHeader><CardContent><div className="text-3xl font-bold">+{stats.newFines}</div></CardContent><CardFooter><Button className="w-full" onClick={() => navigate('/new-fines')}>View Fines</Button></CardFooter></Card>
+              <Card><CardHeader><CardTitle>Settled Fines (7d)</CardTitle></CardHeader><CardContent><div className="text-3xl font-bold">+{stats.settledFines}</div></CardContent><CardFooter><Button className="w-full" onClick={() => navigate("/settled-fines")}>View All Fines</Button></CardFooter></Card>
               <Card><CardHeader><CardTitle>Pending Disputes</CardTitle></CardHeader><CardContent><div className="text-3xl font-bold">{stats.pendingDisputes}</div></CardContent><CardFooter><Button className="w-full" onClick={() => navigate('/pending-disputes')}>View Disputes</Button></CardFooter></Card>
               <Card><CardHeader><CardTitle>Outstanding Fines</CardTitle></CardHeader><CardContent><div className="text-3xl font-bold">{stats.outstandingFines}</div></CardContent><CardFooter><Button className="w-full" onClick={() => navigate('/outstanding-fines')}>View Fines</Button></CardFooter></Card>
             </>
@@ -188,7 +226,7 @@ const Dashboard = () => {
                   </div>
                   <div className="lg:col-span-2">
                     <h3 className="font-semibold text-lg mb-4 text-foreground">Top Violations</h3>
-                    {/* <ViolationsPieChart data={pieChartData}/> */}
+                    <ViolationsPieChart data={pieChartData}/>
                   </div>
                 </>
               )}

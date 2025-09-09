@@ -9,7 +9,7 @@ import Auth from "./pages/Auth";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
 import PaidFines from "./pages/AllFines";
-import NewFines from "./pages/SettledFines";
+import SettledFines from "./pages/SettledFines";
 import PendingDisputes from "./pages/PendingDisputes";
 import OutstandingFines from "./pages/OutstandingFines";
 import Settings from "./pages/Settings";
@@ -55,7 +55,7 @@ const AppRoutes = () => {
         <Route element={<ProtectedRoute allowedRoles={['officer', 'department_admin', 'admin']} />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/paid-fines" element={<PaidFines />} />
-          <Route path="/new-fines" element={<NewFines />} />
+          <Route path="/settled-fines" element={<SettledFines />} />
           <Route path="/pending-disputes" element={<PendingDisputes />} />
           <Route path="/outstanding-fines" element={<OutstandingFines />} />
           <Route path="/settings" element={<Settings />} />
