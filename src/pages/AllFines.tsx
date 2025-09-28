@@ -58,7 +58,7 @@ const staticFines: Fine[] = [
     fine_date: '2023-05-15',
     due_date: '2023-06-15',
     status: 'paid',
-    profiles: [{ first_name: 'John', last_name: 'Doe', email: 'john.doe@example.com' }]
+    profiles: [{ first_name: 'John', last_name: 'Mutorwa', email: 'john.mutorwa@example.com' }]
   },
   {
     id: 'st-002-2023',
@@ -67,7 +67,7 @@ const staticFines: Fine[] = [
     fine_date: '2023-06-22',
     due_date: '2023-07-22',
     status: 'paid',
-    profiles: [{ first_name: 'Jane', last_name: 'Smith', email: 'jane.smith@example.com' }]
+    profiles: [{ first_name: 'Jane', last_name: 'Shikongo', email: 'jane.shikongo@example.com' }]
   },
   {
     id: 'st-003-2023',
@@ -76,7 +76,7 @@ const staticFines: Fine[] = [
     fine_date: '2023-07-30',
     due_date: '2023-08-30',
     status: 'paid',
-    profiles: [{ first_name: 'Robert', last_name: 'Johnson', email: 'robert.johnson@example.com' }]
+    profiles: [{ first_name: 'Simasiku', last_name: 'Mangundu', email: 'simasiku.mangundu@example.com' }]
   },
   // 1 outstanding ticket
   {
@@ -86,7 +86,7 @@ const staticFines: Fine[] = [
     fine_date: '2023-10-15',
     due_date: '2023-11-30',
     status: 'overdue',
-    profiles: [{ first_name: 'Michael', last_name: 'Brown', email: 'michael.brown@example.com' }]
+    profiles: [{ first_name: 'Michael', last_name: 'Haikali', email: 'michael.haikali@example.com' }]
   },
   // 1 pending dispute ticket
   {
@@ -96,7 +96,7 @@ const staticFines: Fine[] = [
     fine_date: '2023-09-10',
     due_date: '2023-10-10',
     status: 'disputed',
-    profiles: [{ first_name: 'Sarah', last_name: 'Wilson', email: 'sarah.wilson@example.com' }]
+    profiles: [{ first_name: 'Sarah', last_name: 'Wakudumo', email: 'sarah.wakudumo@example.com' }]
   }
 ];
 
@@ -264,7 +264,7 @@ const FinesDashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Total Fines</CardTitle>
+              <CardTitle className="text-sm font-medium">Number of Total Fines</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{totalFines}</div>

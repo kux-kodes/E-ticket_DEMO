@@ -8,7 +8,7 @@ import { ThemeToggle } from '@/components/theme-toggle';
 
 const emergencyServices = [
   { name: "Namibian Police", number: "10111", tel: "tel:10111", icon: Siren },
-  { name: "Headquarters Fire Station", number: "211 111", tel: "tel:211111", icon: Building },
+  { name: " Fire Department", number: "211 111", tel: "tel:211111", icon: Building },
   { name: "MVA Fund", number: "+264 61 289 7000", tel: "tel:+264612897000", icon: Ambulance },
   { name: "State Hospital", number: "203 9111", tel: "tel:2039111", icon: Ambulance },
 ];
