@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import SplashScreen from "@/components/SplashScreen";
 import Index from "./pages/Index";
-import Auth from "./pages/Auth";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
 import PaidFines from "./pages/AllFines";
@@ -45,12 +44,12 @@ const AppRoutes = () => {
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Index />} />
-        <Route path="/auth" element={<Auth />} />
-        <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/sign-in" element={<SignIn />} /> {/* Fixed casing */}
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/register-department" element={<DepartmentRegistration />} />
         <Route path="/department-registration-success" element={<DepartmentRegistrationSuccess />} />
 
+        <Route path="/auth" element={<Navigate to="/sign-in" replace />} />
         {/* Officer Routes */}
         <Route element={<ProtectedRoute allowedRoles={['officer', 'department_admin', 'admin']} />}>
           <Route path="/dashboard" element={<Dashboard />} />

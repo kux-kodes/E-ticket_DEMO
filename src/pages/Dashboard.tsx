@@ -36,7 +36,7 @@ type Profile = {
 
 // Static data for dashboard statistics
 const staticStats = {
-  finesCollected: 3000, // Sum of 3 settled tickets: 1000 + 500 + 1500
+  finesCollected: 5,
   settledFines: 3, // Total of all tickets
   pendingDisputes: 1, // 1 pending dispute
   outstandingFines: 1, // 1 outstanding fine
@@ -188,8 +188,8 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {loading ? Array.from({ length: 4 }).map((_, i) => <Card key={i}><CardHeader><Skeleton className="h-6 w-3/4" /></CardHeader><CardContent><Skeleton className="h-8 w-1/2" /></CardContent><CardFooter><Skeleton className="h-10 w-full" /></CardFooter></Card>) : (
             <>
-              <Card><CardHeader><CardTitle>Total Fines (7d)</CardTitle></CardHeader><CardContent><div className="text-3xl font-bold">N${stats.finesCollected.toLocaleString()}</div></CardContent><CardFooter><Button className="w-full" onClick={() => navigate('/paid-fines')}>View Fines</Button></CardFooter></Card>
-              <Card><CardHeader><CardTitle>Settled Fines (7d)</CardTitle></CardHeader><CardContent><div className="text-3xl font-bold">+{stats.settledFines}</div></CardContent><CardFooter><Button className="w-full" onClick={() => navigate("/settled-fines")}>View All Fines</Button></CardFooter></Card>
+              <Card><CardHeader><CardTitle>Total Fines (7d)</CardTitle></CardHeader><CardContent><div className="text-3xl font-bold">{stats.finesCollected.toLocaleString()}</div></CardContent><CardFooter><Button className="w-full" onClick={() => navigate('/paid-fines')}>View Fines</Button></CardFooter></Card>
+              <Card><CardHeader><CardTitle>Settled Fines (7d)</CardTitle></CardHeader><CardContent><div className="text-3xl font-bold">{stats.settledFines}</div></CardContent><CardFooter><Button className="w-full" onClick={() => navigate("/settled-fines")}>View All Fines</Button></CardFooter></Card>
               <Card><CardHeader><CardTitle>Pending Disputes</CardTitle></CardHeader><CardContent><div className="text-3xl font-bold">{stats.pendingDisputes}</div></CardContent><CardFooter><Button className="w-full" onClick={() => navigate('/pending-disputes')}>View Disputes</Button></CardFooter></Card>
               <Card><CardHeader><CardTitle>Outstanding Fines</CardTitle></CardHeader><CardContent><div className="text-3xl font-bold">{stats.outstandingFines}</div></CardContent><CardFooter><Button className="w-full" onClick={() => navigate('/outstanding-fines')}>View Fines</Button></CardFooter></Card>
             </>
