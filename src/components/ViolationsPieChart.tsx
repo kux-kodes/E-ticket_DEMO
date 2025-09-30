@@ -5,7 +5,7 @@ interface ViolationsPieChartProps {
   data: { name: string; value: number }[];
 }
 
-const COLORS = ['#bcdc49', '#06404c', '#88a32b', '#042f38', '#d3e888'];
+const COLORS = ['#06B6D4', '#8B5CF6', '#10B981', '#F59E0B', '#EC4899'];
 
 const ViolationsPieChart = ({ data }: ViolationsPieChartProps) => {
   return (

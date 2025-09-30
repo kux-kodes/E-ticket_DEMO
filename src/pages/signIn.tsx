@@ -6,12 +6,35 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Eye, EyeOff, Mail, Lock, AlertCircle, User } from 'lucide-react';
 import Logo from "@/components/Logo";
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { useSession } from '@/contexts/SessionContext';
 
-const SignIn = () => { // Changed from signIn to SignIn
+// Static ID number and password mapping
+const STATIC_USERS: { [key: string]: { password: string; email: string; role: string; name: string } } = {
+  '3458700987': {
+    password: 'test123',
+    email: 'admin@driva.com',
+    role: 'officer',
+    name: 'System Administrator'
+  },
+  '1234567890': {
+    password: 'password123',
+    email: 'officer@driva.com',
+    role: 'officer',
+    name: 'Traffic Officer'
+  },
+  '0987654321': {
+    password: 'demo123',
+    email: 'citizen@driva.com',
+    role: 'citizen',
+    name: 'Demo Citizen'
+  }
+};
+
+const SignIn = () => {
   const navigate = useNavigate();
-  const location = useLocation();
+  const { session, profile } = useSession();
   const [loginMethod, setLoginMethod] = useState<'email' | 'id'>('email');
   const [formData, setFormData] = useState({
     email: '',
@@ -21,50 +44,67 @@ const SignIn = () => { // Changed from signIn to SignIn
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [loginSuccess, setLoginSuccess] = useState(false);
 
-  // Clear any existing session data when signin page loads
+  // Redirect if already authenticated or after successful login
   useEffect(() => {
-    sessionStorage.removeItem('supabase.auth.token');
-    sessionStorage.removeItem('supabase.user.data');
-    sessionStorage.removeItem('supabase.profile.data');
-    
-    // Check if we were redirected here due to authentication issue
-    if (location.state?.from) {
-      setError('Please sign in to access that page');
+    if (session && profile) {
+      console.log('Session detected, redirecting...', { role: profile.role });
+      redirectBasedOnRole(profile.role);
     }
-  }, [location]);
+  }, [session, profile, navigate]);
+
+  // Additional effect to handle immediate redirect after login
+  useEffect(() => {
+    if (loginSuccess && session && profile) {
+      console.log('Login successful, redirecting to:', profile.role);
+      redirectBasedOnRole(profile.role);
+    }
+  }, [loginSuccess, session, profile, navigate]);
 
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (error) setError('');
   };
 
+  const handleStaticIdLogin = async (idNumber: string, password: string) => {
+    console.log('Attempting static login with:', { idNumber, password });
+    
+    const cleanId = idNumber.trim();
+    const user = STATIC_USERS[cleanId];
+    
+    if (!user) {
+      throw new Error('Invalid ID number or user not found');
+    }
+
+    if (user.password !== password) {
+      throw new Error('Invalid password');
+    }
+
+    return user;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
+    setLoginSuccess(false);
 
     try {
-      let userEmail = formData.email;
+      let loginEmail = formData.email;
+      let loginPassword = formData.password;
 
-      // If logging in with ID number, first look up the associated email
+      // If logging in with ID number, use static verification
       if (loginMethod === 'id' && formData.idNumber) {
-        const { data: profileData, error: profileError } = await supabase
-          .from('profiles')
-          .select('email')
-          .eq('id_number', formData.idNumber)
-          .single();
-
-        if (profileError || !profileData) {
-          throw new Error('Invalid ID number or user not found');
-        }
-        
-        userEmail = profileData.email;
+        const user = await handleStaticIdLogin(formData.idNumber, formData.password);
+        loginEmail = user.email;
+        loginPassword = user.password;
       }
 
+      // Sign in with Supabase
       const { data, error: signInError } = await supabase.auth.signInWithPassword({
-        email: userEmail,
-        password: formData.password,
+        email: loginEmail,
+        password: loginPassword,
       });
 
       if (signInError) {
@@ -72,43 +112,48 @@ const SignIn = () => { // Changed from signIn to SignIn
       }
 
       if (data.session) {
-        // Store session in sessionStorage
-        sessionStorage.setItem('supabase.auth.token', JSON.stringify(data.session));
-        sessionStorage.setItem('lastActivity', Date.now().toString());
-        
-        // Get user profile
-        const { data: profileData } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', data.session.user.id)
-          .single();
-        
-        if (profileData) {
-          sessionStorage.setItem('supabase.profile.data', JSON.stringify(profileData));
-          
-          // Redirect based on role
-          switch (profileData.role) {
-            case 'admin':
-              navigate('/admin/dashboard');
-              break;
-            case 'officer':
-            case 'department_admin':
-              navigate('/dashboard');
-              break;
-            case 'citizen':
-              navigate('/citizen-dashboard');
-              break;
-            default:
-              navigate('/');
-          }
-        }
+        console.log('Login successful, session created');
+        setLoginSuccess(true);
+        // The SessionContext should automatically detect the new session
+        // and the useEffect will handle the redirect
       }
     } catch (err) {
+      console.error('Login error:', err);
       setError(err instanceof Error ? err.message : 'An error occurred during sign in');
     } finally {
       setIsLoading(false);
     }
   };
+
+  const redirectBasedOnRole = (role: string) => {
+    console.log('Redirecting based on role:', role);
+    switch (role) {
+      case 'admin':
+        navigate('/admin/dashboard', { replace: true });
+        break;
+      case 'officer':
+      case 'department_admin':
+        navigate('/dashboard', { replace: true });
+        break;
+      case 'citizen':
+        navigate('/citizen-dashboard', { replace: true });
+        break;
+      default:
+        navigate('/', { replace: true });
+    }
+  };
+
+  // If we're already authenticated, show loading while redirecting
+  if (session && profile) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-foreground">Redirecting...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
@@ -124,7 +169,10 @@ const SignIn = () => { // Changed from signIn to SignIn
         </CardHeader>
 
         <CardContent className="px-6">
-          <Tabs value={loginMethod} onValueChange={(value) => setLoginMethod(value as 'email' | 'id')} className="w-full">
+          <Tabs value={loginMethod} onValueChange={(value) => {
+            setLoginMethod(value as 'email' | 'id');
+            setError('');
+          }} className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger value="email" className="text-sm">
                 <Mail className="h-4 w-4 mr-2" />
@@ -145,7 +193,6 @@ const SignIn = () => { // Changed from signIn to SignIn
                   </div>
                 )}
 
-                {/* Email Field */}
                 <div className="space-y-2">
                   <Label htmlFor="email" className="text-foreground font-medium">
                     Email Address
@@ -165,7 +212,6 @@ const SignIn = () => { // Changed from signIn to SignIn
                   </div>
                 </div>
 
-                {/* Password Field */}
                 <div className="space-y-2">
                   <Label htmlFor="password" className="text-foreground font-medium">Password</Label>
                   <div className="relative">
@@ -210,7 +256,6 @@ const SignIn = () => { // Changed from signIn to SignIn
                   </div>
                 )}
 
-                {/* ID Number Field */}
                 <div className="space-y-2">
                   <Label htmlFor="idNumber" className="text-foreground font-medium">
                     ID Number
@@ -228,15 +273,15 @@ const SignIn = () => { // Changed from signIn to SignIn
                       disabled={isLoading}
                     />
                   </div>
+                  
                 </div>
 
-                {/* Password Field */}
                 <div className="space-y-2">
-                  <Label htmlFor="password" className="text-foreground font-medium">Password</Label>
+                  <Label htmlFor="password-id" className="text-foreground font-medium">Password</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-foreground/60" />
                     <Input
-                      id="password"
+                      id="password-id"
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter your password"
                       value={formData.password}
@@ -268,21 +313,21 @@ const SignIn = () => { // Changed from signIn to SignIn
           </Tabs>
         </CardContent>
 
-       <CardFooter className="flex flex-col px-6 pb-6">
-  <p className="text-sm text-foreground/70 text-center">
-    Don't have an account?{' '}
-    <a 
-      href="/sign-up"  
-      className="text-primary hover:text-primary/80 font-medium transition-colors"
-    >
-      Sign Up
-    </a>
-  </p>
-   </CardFooter>
+        <CardFooter className="flex flex-col px-6 pb-6">
+          <p className="text-sm text-foreground/70 text-center">
+            Don't have an account?{' '}
+            <a 
+              href="/sign-up"  
+              className="text-primary hover:text-primary/80 font-medium transition-colors"
+            >
+              Sign Up
+            </a>
+          </p>
+         
+        </CardFooter>
       </Card>
     </div>
   );
 };
 
 export default SignIn;
-
