@@ -70,9 +70,9 @@ serve(async (req) => {
     let emailBody = '';
 
     if (decision === 'Approved') {
-      emailBody = `Dear Citizen,\n\nGood news! Your dispute for fine #${fineIdentifier} regarding "${dispute.fines.violation_type}" has been approved.\n\nThe fine has been waived, and no further action is required.\n\nOfficer notes: ${notes || 'N/A'}\n\nRegards,\nDRIVA System`;
+      emailBody = `Dear Citizen,\n\nGood news! Your dispute for fine #${fineIdentifier} regarding "${dispute.fines.violation_type}" has been approved.\n\nThe fine has been waived, and no further action is required.\n\nOfficer notes: ${notes || 'N/A'}\n\nRegards,\ndriva System`;
     } else {
-      emailBody = `Dear Citizen,\n\nThis email is to inform you that your dispute for fine #${fineIdentifier} regarding "${dispute.fines.violation_type}" has been reviewed and rejected.\n\nThe fine is now considered outstanding and is due by ${new Date(dispute.fines.due_date).toLocaleDateString()}.\nPlease log in to the citizen portal to view details and settle the payment.\n\nOfficer notes: ${notes || 'N/A'}\n\nRegards,\nDRIVA System`;
+      emailBody = `Dear Citizen,\n\nThis email is to inform you that your dispute for fine #${fineIdentifier} regarding "${dispute.fines.violation_type}" has been reviewed and rejected.\n\nThe fine is now considered outstanding and is due by ${new Date(dispute.fines.due_date).toLocaleDateString()}.\nPlease log in to the citizen portal to view details and settle the payment.\n\nOfficer notes: ${notes || 'N/A'}\n\nRegards,\ndriva System`;
     }
 
     // In a real application, you would use an email service like Resend or SendGrid here.

@@ -132,7 +132,7 @@ const Dashboard = () => {
   const handleDownloadPdf = () => {
     try {
       const doc = new jsPDF();
-      doc.text("DRIVA - Traffic Enforcement Report", 20, 20);
+      doc.text("driva - Traffic Enforcement Report", 20, 20);
       doc.text(`Time Range: Last ${timeRange} days`, 20, 30);
       doc.text(`Total Fines Collected: N$${stats.finesCollected.toLocaleString()}`, 20, 40);
       doc.text(`New Fines: ${stats.settledFines}`, 20, 50);

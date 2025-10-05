@@ -164,7 +164,7 @@ const SignIn = () => {
           </div>
           <CardTitle className="text-3xl text-foreground mb-2">Welcome Back</CardTitle>
           <CardDescription className="text-foreground/80 text-lg">
-            Sign in to your DRIVA account
+            Sign in to your driva account
           </CardDescription>
         </CardHeader>
 

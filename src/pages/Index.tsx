@@ -44,7 +44,7 @@ const Index = () => {
     {
       name: "Inspector M. Kavari",
       role: "Chief of Traffic Police, Windhoek",
-      content: "DRIVA has revolutionized our process. What used to take weeks of paperwork now happens in real-time."
+      content: "driva has revolutionized our process. What used to take weeks of paperwork now happens in real-time."
     },
     {
       name: "Sgt. A. Shipanga",
@@ -66,7 +66,7 @@ const Index = () => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
               <Logo size="medium" />
-              <span className="text-xl font-bold text-foreground">DRIVA</span>
+              <span className="text-xl font-bold text-foreground">driva</span>
             </div>
             <div className="flex items-center space-x-4">
               <Button 
@@ -95,7 +95,7 @@ const Index = () => {
             <span className="text-primary">One Fine at a Time.</span>
           </h1>
           <p className="text-xl text-foreground/80 mb-8 max-w-3xl mx-auto">
-            DRIVA replaces manual ticketing and Excel databases with a seamless,
+            driva replaces manual ticketing and Excel databases with a seamless,
             digital system for issuing, tracking, and settling traffic fines.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -222,7 +222,7 @@ const Index = () => {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-3 mb-4 md:mb-0">
               <Logo size="small" />
-              <span className="text-xl font-bold text-foreground">DRIVA</span>
+              <span className="text-xl font-bold text-foreground">driva</span>
             </div>
             <div className="flex space-x-6">
               <a href="#" className="text-foreground/60 hover:text-foreground transition-colors">Privacy</a>
@@ -231,7 +231,7 @@ const Index = () => {
             </div>
           </div>
           <div className="text-center text-sm text-foreground/60 mt-8">
-            &copy; {new Date().getFullYear()} DRIVA. All rights reserved.
+            &copy; {new Date().getFullYear()} driva. All rights reserved.
           </div>
         </div>
       </footer>

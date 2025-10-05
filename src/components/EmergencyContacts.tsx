@@ -6,8 +6,8 @@ import { Siren, Building, Ambulance } from 'lucide-react';
 const emergencyServices = [
   { name: "Namibian Police", number: "10111", tel: "tel:10111", icon: Siren },
   { name: "Fire Department", number: "211 111", tel: "tel:211111", icon: Building },
-  { name: "MVA Fund", number: "+264 61 289 7000", tel: "tel:+264612897000", icon: Ambulance },
-  { name: "State Hospital", number: "203 9111", tel: "tel:2039111", icon: Ambulance },
+  { name: "MVA Fund", number: "9682", tel: "tel:9682", icon: Ambulance },
+  { name: "Ambulance Service", number: "203 9111", tel: "tel:2039111", icon: Ambulance },
 ];
 
 const EmergencyContacts = () => {
