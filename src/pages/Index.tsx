@@ -20,7 +20,7 @@ const Index = () => {
     },
     {
       icon: Users,
-      title: "Citizen Portal",
+      title: "Driver Portal",
       description: "A public-facing portal for offenders to easily view, dispute, and pay their fines online."
     },
     {
