@@ -42,32 +42,13 @@ const staticStats = {
   outstandingFines: 1, // 1 outstanding fine
 };
 
-// Static trend data for the chart
-const staticTrendData = [
-  { name: 'Day 1', fines: 2 },
-  { name: 'Day 2', fines: 1 },
-  { name: 'Day 3', fines: 0 },
-  { name: 'Day 4', fines: 1 },
-  { name: 'Day 5', fines: 0 },
-  { name: 'Day 6', fines: 1 },
-  { name: 'Day 7', fines: 0 },
-];
 
-// Static violation data for the pie chart
-const staticViolationData = [
-  { name: 'Speeding', value: 2 },
-  { name: 'Parking Violation', value: 1 },
-  { name: 'Red Light Violation', value: 1 },
-  { name: 'Illegal Parking', value: 1 },
-];
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { profile } = useSession();
   const [timeRange, setTimeRange] = useState(7);
   const [stats, setStats] = useState({ finesCollected: 0, settledFines: 0, pendingDisputes: 0, outstandingFines: 0 });
-  const [trendChartData, setTrendChartData] = useState<{ name: string; fines: number }[]>([]);
-  const [pieChartData, setPieChartData] = useState<{ name: string; value: number }[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -98,24 +79,18 @@ const Dashboard = () => {
 
         const totalCollected = paidFinesRes.data?.reduce((sum, fine) => sum + fine.amount, 0) || 0;
         
-        // Use database data if available, otherwise use static data
         setStats({
           finesCollected: totalCollected > 0 ? totalCollected : staticStats.finesCollected,
           settledFines: settledFinesRes.count || staticStats.settledFines,
           pendingDisputes: pendingDisputesRes.count || staticStats.pendingDisputes,
           outstandingFines: outstandingFinesRes.count || staticStats.outstandingFines,
         });
-        
-        setTrendChartData(trendRes.data?.length > 0 ? trendRes.data : staticTrendData);
-        setPieChartData(pieRes.data?.length > 0 ? pieRes.data : staticViolationData);
 
       } catch (error) {
         showError("Could not load dashboard data. Showing sample data.");
         console.error(error);
         // Use static data when there's an error
         setStats(staticStats);
-        setTrendChartData(staticTrendData);
-        setPieChartData(staticViolationData);
       } finally {
         setLoading(false);
       }
@@ -222,11 +197,11 @@ const Dashboard = () => {
                 <>
                   <div className="lg:col-span-3">
                     <h3 className="font-semibold text-lg mb-4 text-foreground">Fines Trend</h3>
-                    <FinesTrendChart data={trendChartData} />
+                    <FinesTrendChart />
                   </div>
                   <div className="lg:col-span-2">
                     <h3 className="font-semibold text-lg mb-4 text-foreground">Top Violations</h3>
-                    <ViolationsPieChart data={pieChartData}/>
+                    <ViolationsPieChart />
                   </div>
                 </>
               )}
