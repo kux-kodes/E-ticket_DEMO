@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, FileText, ShieldCheck, Gavel, Siren } from 'lucide-react';
+import { ArrowRight, FileText, ShieldCheck, Gavel, Phone } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Logo from "@/components/Logo";
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -20,6 +20,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useSession } from '@/contexts/SessionContext';
 import { Skeleton } from '@/components/ui/skeleton';
 import { showError } from '@/utils/toast';
+import EmergencyContacts from '@/components/EmergencyContacts';
 
 type Profile = {
   id: string;
@@ -147,7 +148,7 @@ const CitizenDashboard = () => {
           )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6">
           <Card>
             <CardHeader><CardTitle>Manage Your Fines</CardTitle></CardHeader>
             <CardContent>
@@ -157,15 +158,7 @@ const CitizenDashboard = () => {
               </Button>
             </CardContent>
           </Card>
-          <Card>
-            <CardHeader><CardTitle>Emergency Contacts</CardTitle></CardHeader>
-            <CardContent>
-              <p className="text-foreground/70 mb-4">Quickly access emergency service numbers.</p>
-              <Button variant="outline" onClick={() => navigate('/emergency')}>
-                <Siren className="mr-2 h-4 w-4" /> View Contacts
-              </Button>
-            </CardContent>
-          </Card>
+          <EmergencyContacts />
         </div>
       </main>
     </div>
