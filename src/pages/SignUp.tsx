@@ -116,7 +116,7 @@ const SignUp = () => {
           throw signInError;
         }
 
-        showSuccess('Registration successful! Welcome to DRIVA.');
+        showSuccess('Registration successful! Welcome to driva.');
         navigate('/citizen-dashboard');
       }
     } catch (err: any) {
@@ -166,7 +166,7 @@ const SignUp = () => {
           throw signInError;
         }
 
-        showSuccess('Registration successful! Welcome to DRIVA.');
+        showSuccess('Registration successful! Welcome to driva.');
         navigate('/citizen-dashboard');
       }
     } catch (err: any) {
@@ -193,7 +193,7 @@ const SignUp = () => {
           </div>
           <CardTitle className="text-3xl text-foreground mb-2">Create Your Account</CardTitle>
           <CardDescription className="text-foreground/80 text-lg">
-            Join DRIVA today
+            Join driva today
           </CardDescription>
         </CardHeader>
 

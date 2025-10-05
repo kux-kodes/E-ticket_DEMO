@@ -66,7 +66,7 @@ const DepartmentRegistration = () => {
           </div>
           <CardTitle className="text-3xl text-foreground mb-2">Department Registration</CardTitle>
           <CardDescription className="text-foreground/80 text-lg">
-            Register your department to start using the DRIVA system.
+            Register your department to start using the driva system.
           </CardDescription>
         </CardHeader>
 
