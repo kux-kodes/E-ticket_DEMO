@@ -38,7 +38,7 @@ const staticPendingDispute: Dispute[] = [
     fines: [
       {
         violation_type: 'Speeding in School Zone',
-        profiles: [{ first_name: 'Sarah', last_name: 'Wilson' }]
+        profiles: [{ first_name: 'Sarah', last_name: 'Wakudumo' }]
       }
     ]
   }

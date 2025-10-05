@@ -39,7 +39,7 @@ const staticOutstandingTicket: OutstandingFine[] = [
     amount: 750,
     due_date: '2023-11-30',
     status: 'outstanding',
-    profiles: [{ first_name: 'Michael', last_name: 'Brown' }]
+    profiles: [{ first_name: 'Michael', last_name: 'Haikali' }]
   }
 ];
 

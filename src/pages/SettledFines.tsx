@@ -36,21 +36,21 @@ const staticSettledTickets: PaidFine[] = [
     violation_type: 'Speeding',
     amount: 1000,
     fine_date: '2023-05-15',
-    profiles: [{ first_name: 'John', last_name: 'Doe' }]
+    profiles: [{ first_name: 'John', last_name: 'Mutorwa' }]
   },
   {
     id: 'st-002-2023',
     violation_type: 'Parking Violation',
     amount: 500,
     fine_date: '2023-06-22',
-    profiles: [{ first_name: 'Jane', last_name: 'Smith' }]
+    profiles: [{ first_name: 'Jane', last_name: 'Shievali' }]
   },
   {
     id: 'st-003-2023',
     violation_type: 'Red Light Violation',
     amount: 1500,
     fine_date: '2023-07-30',
-    profiles: [{ first_name: 'Robert', last_name: 'Johnson' }]
+    profiles: [{ first_name: 'Robert', last_name: 'Amadila' }]
   }
 ];
 
